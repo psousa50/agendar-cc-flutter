@@ -1,5 +1,5 @@
-import 'package:agendar_cc_flutter/api/reference_data.dart';
-import 'package:agendar_cc_flutter/app_config.dart';
+import 'api/reference_data.dart';
+import 'app_config.dart';
 import 'package:get_it/get_it.dart';
 
 import 'areas_manager.dart';

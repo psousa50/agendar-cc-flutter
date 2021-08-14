@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GpsLocation {
@@ -279,4 +280,17 @@ class IrnPlace {
 
   factory IrnPlace.fromJson(String source) =>
       IrnPlace.fromMap(json.decode(source));
+}
+
+class IrnFilter {
+  String? region;
+  int? districtId;
+  int? countyId;
+  int? placeName;
+  TimeOfDay? startTime;
+  TimeOfDay? endTime;
+  DateTime? startDate;
+  DateTime? endDate;
+  GpsLocation? location;
+  int? locationRadius;
 }

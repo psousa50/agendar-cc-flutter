@@ -1,4 +1,4 @@
-import 'package:agendar_cc_flutter/screens/HomeScreen/home_screen.dart';
+import 'screens/HomeScreen/home_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'app_config.dart';

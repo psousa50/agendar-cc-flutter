@@ -1,4 +1,4 @@
-import 'package:agendar_cc_flutter/service_locator.dart';
+import 'service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:agendar_cc_flutter/models.dart';
+import '../models.dart';
 
 var irnPlacesString = '''
 [

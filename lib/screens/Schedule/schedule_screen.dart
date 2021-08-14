@@ -1,5 +1,5 @@
-import 'package:agendar_cc_flutter/models.dart';
-import 'package:agendar_cc_flutter/screens/Schedule/javascript_code.dart';
+import '../../models.dart';
+import 'javascript_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 

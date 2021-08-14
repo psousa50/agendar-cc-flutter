@@ -1,4 +1,4 @@
-import 'package:agendar_cc_flutter/models.dart';
+import '../../models.dart';
 
 class JavaScriptCode {
   static String messageHtml(String message, String fontSize) {
