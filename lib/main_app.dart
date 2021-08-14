@@ -1,7 +1,8 @@
-import 'screens/Schedule/schedule_screen.dart';
+import 'package:agendar_cc_flutter/screens/HomeScreen/home_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'app_config.dart';
+import 'app_providers.dart';
 
 class MainApp extends StatelessWidget {
   final AppConfig config;
@@ -10,9 +11,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(child: ScheduleScreen()),
+    return AppProviders(
+      config: config,
+      child: MaterialApp(
+        home: Scaffold(
+          body: SafeArea(child: HomeScreen()),
+        ),
       ),
     );
   }
