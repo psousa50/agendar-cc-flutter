@@ -7,13 +7,62 @@ import '../models.dart';
 
 class ReferenceData {
   final AppConfig _config;
-  Iterable<IrnTable>? _irnTables;
+  Iterable<String> _regions = ["Continente", "Acores", "Madeira"];
   Iterable<IrnService>? _irnServices;
   Iterable<District>? _districts;
   Iterable<County>? _counties;
   Iterable<IrnPlace>? _irnPlaces;
+  var _staticDataFetched = false;
 
   ReferenceData(this._config);
+
+  Iterable<String> regions() {
+    return _regions;
+  }
+
+  Iterable<IrnService> irnServices() {
+    return _irnServices ?? [];
+  }
+
+  Iterable<District> districts() {
+    return _districts ?? [];
+  }
+
+  Iterable<County> counties() {
+    return _counties ?? [];
+  }
+
+  Iterable<IrnPlace> irnPlaces() {
+    return _irnPlaces ?? [];
+  }
+
+  IrnService irnService(int serviceId) {
+    return irnServices().firstWhere((e) => e.serviceId == serviceId);
+  }
+
+  District district(int districtId) {
+    return districts().firstWhere((e) => e.districtId == districtId);
+  }
+
+  County county(int countyId) {
+    return counties().firstWhere((e) => e.countyId == countyId);
+  }
+
+  IrnPlace irnPlace(String name) {
+    return irnPlaces().firstWhere((e) => e.name == name);
+  }
+
+  Iterable<District> districtByRegion(String region) {
+    return districts().where((e) => e.region == region);
+  }
+
+  Iterable<County> countyByDistrictId(int districtId) {
+    return counties().where((e) => e.districtId == districtId);
+  }
+
+  Iterable<IrnPlace> irnPlacesByCountyId(int countyId) {
+    return irnPlaces().where((e) => e.countyId == countyId);
+  }
 
   Future<Iterable<T>> _readArea<T>(
     String endpoint,
@@ -26,51 +75,17 @@ class ReferenceData {
     return areas.map(mapArea);
   }
 
-  Future<Iterable<IrnTable>> _readIrnTables() async {
-    return _readArea("irnTables", (d) => IrnTable.fromMap(d));
+  Future<void> _fetchStaticData() async {
+    _regions = ["Continente", "Acores", "Madeira"];
+    _irnServices = await _readArea("irnServices", (d) => IrnService.fromMap(d));
+    _districts = await _readArea("districts", (d) => District.fromMap(d));
+    _counties = await _readArea("counties", (d) => County.fromMap(d));
+    _irnPlaces =
+        await _readArea("irnPlaces?active=Y", (d) => IrnPlace.fromMap(d));
+    _staticDataFetched = true;
   }
 
-  Future<Iterable<IrnService>> _readIrnServices() async {
-    return _readArea("irnServices", (d) => IrnService.fromMap(d));
-  }
-
-  Future<Iterable<District>> _readDistricts() async {
-    return _readArea("districts", (d) => District.fromMap(d));
-  }
-
-  Future<Iterable<County>> _readCounties() async {
-    return _readArea("counties", (d) => County.fromMap(d));
-  }
-
-  Future<Iterable<IrnPlace>> _readIrnPlaces() async {
-    return _readArea("irnPlaces", (d) => IrnPlace.fromMap(d));
-  }
-
-  Future<Iterable<IrnTable>> irnTables() async {
-    return _irnTables ?? await _readIrnTables();
-  }
-
-  Future<Iterable<IrnService>> irnServices() async {
-    return _irnServices ?? await _readIrnServices();
-  }
-
-  Future<Iterable<District>> districts() async {
-    return _districts ?? await _readDistricts();
-  }
-
-  Future<Iterable<County>> counties() async {
-    return _counties ?? await _readCounties();
-  }
-
-  Future<Iterable<IrnPlace>> irnPlaces() async {
-    return _irnPlaces ?? await _readIrnPlaces();
-  }
-
-  Future<Iterable<County>> countiesByDistrict(int districtId) async {
-    return (await counties()).where((e) => e.districtId == districtId);
-  }
-
-  Future<Iterable<IrnPlace>> irnPlacesByCounty(int countyId) async {
-    return (await irnPlaces()).where((e) => e.countyId == countyId);
+  Future<void> fetchAll() async {
+    if (!_staticDataFetched) await _fetchStaticData();
   }
 }

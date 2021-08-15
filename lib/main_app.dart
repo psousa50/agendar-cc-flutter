@@ -1,8 +1,8 @@
-import 'screens/HomeScreen/home_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'app_config.dart';
 import 'app_providers.dart';
+import 'screens/HomeScreen/home_screen.dart';
 
 class MainApp extends StatelessWidget {
   final AppConfig config;

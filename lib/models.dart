@@ -286,7 +286,7 @@ class IrnFilter {
   String? region;
   int? districtId;
   int? countyId;
-  int? placeName;
+  String? placeName;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   DateTime? startDate;

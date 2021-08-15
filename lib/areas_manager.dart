@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import 'models.dart';
-import 'helpers.dart';
 import 'service_locator.dart';
 
 typedef AreasDescription = List<AreaDescription>;
@@ -40,6 +37,7 @@ class AreaDescription {
 
 class AreasManager {
   Map<AreaType, AreasDescription>? _areas;
+
   var referenceData = ServiceLocator.referenceData;
 
   AreaDescription _fromDistrict(District d) {
@@ -74,52 +72,49 @@ class AreasManager {
     );
   }
 
-  Future<AreasDescription> addMarkerImage(AreasDescription areas) {
-    var areasWithImages = areas.map((a) async {
-      a.markerImage = await textAsBitmap(a.name);
-      return a;
-    }).toList();
+  // AreasDescription addMarkerImage(AreasDescription areas) {
+  //   var areasWithImages = areas.map((a) {
+  //     a.markerImage = textAsBitmap(a.name);
+  //     return a;
+  //   }).toList();
 
-    return Future.wait(areasWithImages);
-  }
+  //   return Future.wait(areasWithImages);
+  // }
 
-  Future<Map<AreaType, AreasDescription>> buildAreas() async {
-    var districtAreas =
-        (await referenceData.districts()).map(_fromDistrict).toList();
-    var countiesAreas =
-        (await referenceData.counties()).map(_fromCounty).toList();
+  Map<AreaType, AreasDescription> buildAreas() {
+    var districtAreas = (referenceData.districts()).map(_fromDistrict).toList();
+    var countiesAreas = (referenceData.counties()).map(_fromCounty).toList();
     var irnPlacesAreas =
-        (await referenceData.irnPlaces()).map(_fromIrnPlace).toList();
+        (referenceData.irnPlaces()).map(_fromIrnPlace).toList();
 
     var areas = Areas();
-    areas[AreaType.District] = await addMarkerImage(districtAreas);
-    areas[AreaType.County] = await addMarkerImage(countiesAreas);
-    areas[AreaType.IrnPlace] = await addMarkerImage(irnPlacesAreas);
+    areas[AreaType.District] = districtAreas;
+    areas[AreaType.County] = countiesAreas;
+    areas[AreaType.IrnPlace] = irnPlacesAreas;
 
-    return Future.value(areas);
+    return areas;
   }
 
-  Future<AreasDescription> districts() async {
-    return (await areas())[AreaType.District] ?? [];
+  AreasDescription districts() {
+    return (areas())[AreaType.District] ?? [];
   }
 
-  Future<AreasDescription> counties() async {
-    return (await areas())[AreaType.County] ?? [];
+  AreasDescription counties() {
+    return (areas())[AreaType.County] ?? [];
   }
 
-  Future<AreasDescription> irnPlaces() async {
-    return (await areas())[AreaType.IrnPlace] ?? [];
+  AreasDescription irnPlaces() {
+    return (areas())[AreaType.IrnPlace] ?? [];
   }
 
-  Future<AreasDescription> countiesByDistrict(int districtId) async {
-    return (await counties()).where((c) => c.parentId == districtId).toList();
+  AreasDescription countiesByDistrict(int districtId) {
+    return (counties()).where((c) => c.parentId == districtId).toList();
   }
 
-  Future<AreasDescription> irnPlacesByCounty(int countyId) async {
-    return (await irnPlaces()).where((p) => p.parentId == countyId).toList();
+  AreasDescription irnPlacesByCounty(int countyId) {
+    return (irnPlaces()).where((p) => p.parentId == countyId).toList();
   }
 
-  Future<Areas> areas() async => _areas ?? await buildAreas();
-  Future<AreasDescription> areasByType(AreaType type) async =>
-      (await areas())[type] ?? [];
+  Areas areas() => _areas ?? buildAreas();
+  AreasDescription areasByType(AreaType type) => (areas())[type] ?? [];
 }

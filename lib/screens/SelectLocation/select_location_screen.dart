@@ -3,39 +3,25 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../service_locator.dart';
-import '../../models.dart';
 
 class SelectLocationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: ServiceLocator.referenceData.irnTables(),
-        builder: (BuildContext context, AsyncSnapshot<IrnTables> snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return MainlandMap(markers: Set());
-            default:
-              if (snapshot.hasError)
-                return MainlandMap(markers: Set());
-              else {
-                var data = snapshot.data!;
-                var validData = data.where((d) => d.gpsLocation != null);
-                var markers = validData
-                    .map(
-                      (d) => Marker(
-                        markerId: MarkerId(Uuid().v4()),
-                        position: LatLng(
-                          d.gpsLocation!.latitude,
-                          d.gpsLocation!.longitude,
-                        ),
-                        // icon: d.markerImage ?? BitmapDescriptor.defaultMarker,
-                      ),
-                    )
-                    .toSet();
-                return MainlandMap(markers: markers);
-              }
-          }
-        });
+    var markers = ServiceLocator.referenceData
+        .districts()
+        .where((d) => d.gpsLocation != null)
+        .map(
+          (d) => Marker(
+            markerId: MarkerId(Uuid().v4()),
+            position: LatLng(
+              d.gpsLocation!.latitude,
+              d.gpsLocation!.longitude,
+            ),
+            // icon: d.markerImage ?? BitmapDescriptor.defaultMarker,
+          ),
+        )
+        .toSet();
+    return MainlandMap(markers: markers);
   }
 }
 
