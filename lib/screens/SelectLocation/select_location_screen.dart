@@ -81,24 +81,6 @@ class MainlandMap extends StatelessWidget {
         bounds,
       ),
       markers: markers,
-      circles: {
-        Circle(
-          circleId: CircleId("0"),
-          center: LatLng(target.latitude, target.longitude),
-          radius: 1000,
-        ),
-        Circle(
-          circleId: CircleId("1"),
-          center: LatLng(bounds.southwest.latitude, bounds.southwest.longitude),
-          radius: 1000,
-        ),
-        Circle(
-          circleId: CircleId("2"),
-          center: LatLng(bounds.northeast.latitude, bounds.northeast.longitude),
-          radius: 1000,
-        ),
-      },
-      myLocationEnabled: true,
     );
   }
 }

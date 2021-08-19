@@ -68,8 +68,12 @@ class ReferenceData {
     String endpoint,
     T mapArea(dynamic map),
   ) async {
-    var port = _config.port == null ? '' : ':${_config.port}';
-    var url = Uri.parse('${_config.host}$port/api/v1/$endpoint');
+    var url = Uri(
+      scheme: _config.schema,
+      host: _config.host,
+      port: _config.port,
+      path: 'api/v1/$endpoint',
+    );
     var response = await http.get(url);
     var areas = (json.decode(response.body) as Iterable);
     return areas.map(mapArea);
@@ -80,8 +84,7 @@ class ReferenceData {
     _irnServices = await _readArea("irnServices", (d) => IrnService.fromMap(d));
     _districts = await _readArea("districts", (d) => District.fromMap(d));
     _counties = await _readArea("counties", (d) => County.fromMap(d));
-    _irnPlaces =
-        await _readArea("irnPlaces?active=Y", (d) => IrnPlace.fromMap(d));
+    _irnPlaces = await _readArea("irnPlaces", (d) => IrnPlace.fromMap(d));
     _staticDataFetched = true;
   }
 

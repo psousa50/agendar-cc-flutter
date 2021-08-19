@@ -156,7 +156,7 @@ typedef IrnTables = Iterable<IrnTable>;
 
 class IrnTable {
   final int countyId;
-  final String date;
+  final DateTime date;
   final int districtId;
   final String placeName;
   final String region;
@@ -164,7 +164,6 @@ class IrnTable {
   final String tableNumber;
   final List<String> timeSlots;
   final GpsLocation? gpsLocation;
-
   IrnTable({
     required this.countyId,
     required this.date,
@@ -180,7 +179,7 @@ class IrnTable {
   Map<String, dynamic> toMap() {
     return {
       'countyId': countyId,
-      'date': date,
+      'date': date.toIso8601String().substring(0, 10),
       'districtId': districtId,
       'placeName': placeName,
       'region': region,
@@ -194,7 +193,7 @@ class IrnTable {
   factory IrnTable.fromMap(Map<String, dynamic> map) {
     return IrnTable(
       countyId: map['countyId'],
-      date: map['date'],
+      date: DateTime.parse(map['date']),
       districtId: map['districtId'],
       placeName: map['placeName'],
       region: map['region'],
@@ -283,6 +282,7 @@ class IrnPlace {
 }
 
 class IrnFilter {
+  int? serviceId;
   String? region;
   int? districtId;
   int? countyId;
@@ -291,6 +291,15 @@ class IrnFilter {
   TimeOfDay? endTime;
   DateTime? startDate;
   DateTime? endDate;
-  GpsLocation? location;
-  int? locationRadius;
+  IrnFilter({
+    this.serviceId,
+    this.region,
+    this.districtId,
+    this.countyId,
+    this.placeName,
+    this.startTime,
+    this.endTime,
+    this.startDate,
+    this.endDate,
+  });
 }
