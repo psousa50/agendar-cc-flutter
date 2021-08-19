@@ -42,7 +42,7 @@ class ResultsFetcher extends StatelessWidget {
             if (snapshot.hasError) {
               return Container(child: Text(snapshot.error.toString()));
             } else {
-              return SelectLocationScreen();
+              return Results();
             }
         }
       },
@@ -72,7 +72,20 @@ class Results extends StatelessWidget {
             if (snapshot.hasError) {
               return Container(child: Text(snapshot.error.toString()));
             } else {
-              return IrnTablesMapView(snapshot.data!);
+              return Column(
+                children: [
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IrnTablesDateView(snapshot.data!),
+                  )),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IrnTablesMapView(snapshot.data!),
+                  )),
+                ],
+              );
             }
         }
       },
