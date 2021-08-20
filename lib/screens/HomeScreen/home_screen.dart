@@ -1,6 +1,5 @@
+import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -64,7 +63,7 @@ class _HomeScreenViewResultsState extends State<HomeScreenViewResults> {
   Widget build(BuildContext context) {
     var filter = IrnFilter(
       serviceId: 4,
-      districtId: 12,
+      districtId: 15,
     );
 
     void onDateSelected(DateTime date) {
@@ -130,6 +129,20 @@ class _HomeScreenViewResultsState extends State<HomeScreenViewResults> {
   }
 }
 
+Map<T, List<IrnTable>> groupTables<T>(
+    IrnTables tables, T groupedBy(IrnTable t)) {
+  Map<T, List<IrnTable>> grouped = {};
+  tables.forEach((t) {
+    var key = groupedBy(t);
+    if (!grouped.containsKey(key)) {
+      grouped[key] = [];
+    }
+    grouped[key]!.add(t);
+  });
+
+  return grouped;
+}
+
 class IrnTablesDateView extends StatelessWidget {
   final IrnTables tables;
   final Function(DateTime) onDateSelected;
@@ -141,52 +154,49 @@ class IrnTablesDateView extends StatelessWidget {
     this.selectedDate,
   });
 
-  static Widget _eventIcon(String day) => CircleAvatar(
-        backgroundColor: Colors.lightBlue,
-        child: Text(
-          day,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      );
-
-  EventList<Event> toDatesMap(IrnTables tables) {
-    Map<DateTime, List<Event>> events = {};
-    tables.forEach((t) {
-      var key = t.date;
-      if (!events.containsKey(key)) {
-        events[key] = [];
-      }
-      events[key]!.add(Event(
-        date: t.date,
-        icon: _eventIcon(t.date.day.toString()),
-      ));
-    });
-
-    return EventList<Event>(events: events);
-  }
+  DateTime dateOnly(DateTime date) => DateTime(date.year, date.month, date.day);
 
   @override
   Widget build(BuildContext context) {
-    var markedDatesMap = toDatesMap(tables);
-    var minDate = selectedDate ??
-        (markedDatesMap.events.keys.length > 0
-            ? markedDatesMap.events.keys.reduce(
-                (value, element) => element.isBefore(value) ? element : value)
-            : null);
+    var groupedTables = groupTables(tables, (IrnTable t) => t.date);
+    var minDate = (groupedTables.keys.length > 0
+        ? groupedTables.keys.reduce(
+            (value, element) => element.isBefore(value) ? element : value)
+        : null);
+    var maxDate = (groupedTables.keys.length > 0
+        ? groupedTables.keys.reduce(
+            (value, element) => element.isAfter(value) ? element : value)
+        : null);
     return Container(
-      child: CalendarCarousel<Event>(
-        markedDatesMap: markedDatesMap,
-        markedDateShowIcon: true,
-        markedDateIconMaxShown: 1,
-        markedDateIconBuilder: (event) {
-          return event.icon;
+      child: TableCalendar(
+        selectedDayPredicate: (date) => dateOnly(date) == selectedDate,
+        shouldFillViewport: true,
+        onDaySelected: (selectedDay, focusedDay) =>
+            onDateSelected(dateOnly(selectedDay)),
+        firstDay: minDate ?? DateTime.now(),
+        lastDay: maxDate ?? DateTime.now(),
+        focusedDay: selectedDate ?? minDate ?? DateTime.now(),
+        eventLoader: (DateTime date) {
+          return groupedTables[dateOnly(date)] ?? [];
         },
-        onDayPressed: (date, _) => onDateSelected(date),
-        selectedDateTime: minDate,
-        selectedDayBorderColor: Colors.red,
-        daysHaveCircularBorder: true,
+        calendarFormat: CalendarFormat.month,
+        headerStyle: HeaderStyle(
+          formatButtonVisible: false,
+          titleCentered: true,
+        ),
+        calendarBuilders: CalendarBuilders(
+          selectedBuilder: (context, date, events) => Container(
+            margin: const EdgeInsets.all(4.0),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: Colors.orange,
+                borderRadius: BorderRadius.circular(50.0)),
+            child: Text(
+              date.day.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -202,19 +212,25 @@ class IrnTablesMapView extends StatelessWidget {
   });
 
   Set<Marker> toMarkers(IrnTables tables) {
-    return tables
-        .where((t) => t.gpsLocation != null)
-        .map((t) => Marker(
-              position: LatLng(
-                t.gpsLocation!.latitude.toDouble(),
-                t.gpsLocation!.longitude.toDouble(),
-              ),
-              markerId: MarkerId(
-                Uuid().v4(),
-              ),
-              onTap: () => onPlaceSelected(t.placeName),
-            ))
-        .toSet();
+    var groupedTables = groupTables(
+      tables.where((t) => t.gpsLocation != null),
+      (t) => t.placeName,
+    );
+    var markers = groupedTables.keys.map((k) {
+      var t = groupedTables[k]!.first;
+      var position = LatLng(
+        t.gpsLocation!.latitude.toDouble(),
+        t.gpsLocation!.longitude.toDouble(),
+      );
+      return Marker(
+        position: position,
+        markerId: MarkerId(
+          Uuid().v4(),
+        ),
+        onTap: () => onPlaceSelected(t.placeName),
+      );
+    });
+    return markers.toSet();
   }
 
   @override
