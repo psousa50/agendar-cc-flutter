@@ -75,7 +75,7 @@ class MainlandMap extends StatelessWidget {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
         target: target,
-        zoom: 7.3,
+        zoom: 10.0,
       ),
       cameraTargetBounds: CameraTargetBounds(
         bounds,

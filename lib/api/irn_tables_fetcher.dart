@@ -41,11 +41,7 @@ class IrnTablesFetcher {
     var response = await http.get(url);
     var tablesJson = (json.decode(response.body) as Iterable);
 
-    print('URL: ${url.toString()}');
     var tables = tablesJson.map((t) => IrnTable.fromMap(t));
-
-    print("TABLES: ${tables.length}");
-    print(tables.take(1).map((t) => t.toJson()));
 
     return tables;
   }

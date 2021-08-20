@@ -1,9 +1,10 @@
-import 'package:agendar_cc_flutter/screens/SelectLocation/select_location_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
+
+import 'package:agendar_cc_flutter/screens/SelectLocation/select_location_screen.dart';
 
 import '../../models.dart';
 import '../../service_locator.dart';
@@ -19,14 +20,14 @@ class HomeScreen extends StatelessWidget {
           color: Colors.yellow,
         ),
         Expanded(
-          child: ResultsFetcher(),
+          child: HomeScreenView(),
         )
       ],
     ));
   }
 }
 
-class ResultsFetcher extends StatelessWidget {
+class HomeScreenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -42,7 +43,7 @@ class ResultsFetcher extends StatelessWidget {
             if (snapshot.hasError) {
               return Container(child: Text(snapshot.error.toString()));
             } else {
-              return Results();
+              return HomeScreenViewResults();
             }
         }
       },
@@ -50,13 +51,33 @@ class ResultsFetcher extends StatelessWidget {
   }
 }
 
-class Results extends StatelessWidget {
+class HomeScreenViewResults extends StatefulWidget {
+  @override
+  _HomeScreenViewResultsState createState() => _HomeScreenViewResultsState();
+}
+
+class _HomeScreenViewResultsState extends State<HomeScreenViewResults> {
+  DateTime? selectedDate;
+  String? selectedPlace;
+
   @override
   Widget build(BuildContext context) {
     var filter = IrnFilter(
-      serviceId: 1,
-      districtId: 15,
+      serviceId: 4,
+      districtId: 12,
     );
+
+    void onDateSelected(DateTime date) {
+      setState(() {
+        selectedDate = date;
+      });
+    }
+
+    void onPlaceSelected(String place) {
+      setState(() {
+        selectedPlace = place;
+      });
+    }
 
     return Container(
         child: FutureBuilder(
@@ -72,17 +93,33 @@ class Results extends StatelessWidget {
             if (snapshot.hasError) {
               return Container(child: Text(snapshot.error.toString()));
             } else {
+              var tables = snapshot.data!;
               return Column(
                 children: [
                   Expanded(
                       child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: IrnTablesDateView(snapshot.data!),
+                    child: IrnTablesDateView(
+                      tables: selectedPlace == null
+                          ? tables
+                          : tables.where(
+                              (t) => t.placeName == selectedPlace,
+                            ),
+                      onDateSelected: onDateSelected,
+                      selectedDate: selectedDate,
+                    ),
                   )),
                   Expanded(
                       child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: IrnTablesMapView(snapshot.data!),
+                    child: IrnTablesMapView(
+                      tables: selectedDate == null
+                          ? tables
+                          : tables.where(
+                              (t) => t.date == selectedDate,
+                            ),
+                      onPlaceSelected: onPlaceSelected,
+                    ),
                   )),
                 ],
               );
@@ -95,7 +132,14 @@ class Results extends StatelessWidget {
 
 class IrnTablesDateView extends StatelessWidget {
   final IrnTables tables;
-  const IrnTablesDateView(this.tables);
+  final Function(DateTime) onDateSelected;
+  final DateTime? selectedDate;
+
+  const IrnTablesDateView({
+    required this.tables,
+    required this.onDateSelected,
+    this.selectedDate,
+  });
 
   static Widget _eventIcon(String day) => CircleAvatar(
         backgroundColor: Colors.lightBlue,
@@ -126,8 +170,11 @@ class IrnTablesDateView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var markedDatesMap = toDatesMap(tables);
-    var minDate = markedDatesMap.events.keys
-        .reduce((value, element) => element.isBefore(value) ? element : value);
+    var minDate = selectedDate ??
+        (markedDatesMap.events.keys.length > 0
+            ? markedDatesMap.events.keys.reduce(
+                (value, element) => element.isBefore(value) ? element : value)
+            : null);
     return Container(
       child: CalendarCarousel<Event>(
         markedDatesMap: markedDatesMap,
@@ -136,6 +183,7 @@ class IrnTablesDateView extends StatelessWidget {
         markedDateIconBuilder: (event) {
           return event.icon;
         },
+        onDayPressed: (date, _) => onDateSelected(date),
         selectedDateTime: minDate,
         selectedDayBorderColor: Colors.red,
         daysHaveCircularBorder: true,
@@ -146,23 +194,27 @@ class IrnTablesDateView extends StatelessWidget {
 
 class IrnTablesMapView extends StatelessWidget {
   final IrnTables tables;
-  const IrnTablesMapView(this.tables);
+  final Function(String) onPlaceSelected;
+
+  const IrnTablesMapView({
+    required this.tables,
+    required this.onPlaceSelected,
+  });
 
   Set<Marker> toMarkers(IrnTables tables) {
-    var l = tables.where((t) => t.gpsLocation != null).map((t) {
-      var m = Marker(
-        position: LatLng(
-          t.gpsLocation!.latitude.toDouble(),
-          t.gpsLocation!.longitude.toDouble(),
-        ),
-        markerId: MarkerId(
-          Uuid().v4(),
-        ),
-      );
-      return m;
-    });
-
-    return l.toSet();
+    return tables
+        .where((t) => t.gpsLocation != null)
+        .map((t) => Marker(
+              position: LatLng(
+                t.gpsLocation!.latitude.toDouble(),
+                t.gpsLocation!.longitude.toDouble(),
+              ),
+              markerId: MarkerId(
+                Uuid().v4(),
+              ),
+              onTap: () => onPlaceSelected(t.placeName),
+            ))
+        .toSet();
   }
 
   @override
