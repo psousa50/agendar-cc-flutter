@@ -70,7 +70,7 @@ class _HomeScreenViewResultsState extends State<HomeScreenViewResults> {
   Widget build(BuildContext context) {
     void onDateSelected(DateTime date) {
       setState(() {
-        selectedDate = date;
+        selectedDate = selectedDate == date ? null : date;
       });
     }
 

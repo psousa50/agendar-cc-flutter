@@ -1,62 +1,154 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class MapViewer extends StatelessWidget {
+extension LatLngBoundsExtensions on LatLngBounds {
+  double get left => northeast.longitude;
+  double get right => southwest.longitude;
+  double get top => northeast.latitude;
+  double get bottom => southwest.latitude;
+  double get width => (southwest.longitude - northeast.longitude).abs();
+  double get height => (northeast.latitude - southwest.latitude).abs();
+
+  LatLngBounds fromLTRB(double left, double top, double right, double bottom) {
+    var minLat = min(top, bottom);
+    var maxLat = max(top, bottom);
+    return LatLngBounds(
+      northeast: LatLng(maxLat, left),
+      southwest: LatLng(minLat, right),
+    );
+  }
+
+  LatLng center() {
+    return LatLng(
+      (northeast.latitude + southwest.latitude) / 2.0,
+      (northeast.longitude + southwest.longitude) / 2.0,
+    );
+  }
+
+  LatLngBounds ensureMinimumSize(double minSize) {
+    double dx = max(0, minSize - width);
+    double dy = max(0, minSize - height);
+    return dx == 0 && dy == 0 ? this : inflate(dx, dy);
+  }
+
+  LatLngBounds inflate(double dx, double dy) {
+    return fromLTRB(
+      northeast.longitude - dx,
+      northeast.latitude + dy,
+      southwest.longitude + dx,
+      southwest.latitude - dy,
+    );
+  }
+
+  LatLngBounds inflateByPercentage(double percentage) {
+    return inflate(width * percentage, height * percentage);
+  }
+
+  bool containsBox(LatLngBounds another) {
+    return left <= another.left &&
+        left + width >= another.left + another.width &&
+        top <= another.top &&
+        top + height >= another.top + another.height;
+  }
+}
+
+class MapViewer extends StatefulWidget {
   final Set<Marker> markers;
   const MapViewer({
     required this.markers,
   });
 
-  LatLngBounds calcBounds() {
-    if (markers.length == 0) {
-      return LatLngBounds(
-        southwest: LatLng(37.067410, -9.624353),
-        northeast: LatLng(42.205927, -6.182315),
+  @override
+  _MapViewerState createState() => _MapViewerState();
+}
+
+class _MapViewerState extends State<MapViewer> {
+  static LatLngBounds defaultBounds = LatLngBounds(
+    southwest: LatLng(37.067410, -9.624353),
+    northeast: LatLng(42.205927, -6.182315),
+  );
+
+  final Completer<GoogleMapController> _controller = Completer();
+
+  LatLngBounds? previousBounds;
+
+  LatLngBounds? calcBounds(Set<Marker> markers) {
+    LatLngBounds? bounds;
+    if (markers.length > 0) {
+      var lats = markers.map((m) => m.position.latitude);
+      var lngs = markers.map((m) => m.position.longitude);
+      double minLat = lats.reduce(min);
+      double maxLat = lats.reduce(max);
+      double minLng = lngs.reduce(min);
+      double maxLng = lngs.reduce(max);
+      bounds = LatLngBounds(
+        southwest: LatLng(minLat, minLng),
+        northeast: LatLng(maxLat, maxLng),
       );
     }
-    var minLat = markers
-        .reduce(
-            (min, m) => m.position.latitude < min.position.latitude ? m : min)
-        .position
-        .latitude;
-    var maxLat = markers
-        .reduce(
-            (max, m) => m.position.latitude > max.position.latitude ? m : max)
-        .position
-        .latitude;
-    var minLng = markers
-        .reduce(
-            (min, m) => m.position.longitude < min.position.longitude ? m : min)
-        .position
-        .longitude;
-    var maxLng = markers
-        .reduce(
-            (max, m) => m.position.longitude > max.position.longitude ? m : max)
-        .position
-        .longitude;
-    return LatLngBounds(
-      southwest: LatLng(minLat, minLng),
-      northeast: LatLng(maxLat, maxLng),
-    );
+
+    return bounds;
+  }
+
+  void onMapCreated(GoogleMapController controller) {
+    _controller.complete(controller);
+  }
+
+  void updateCamera() async {
+    var c = await _controller.future;
+    var vr = await c.getVisibleRegion();
+    var bounds = calcBounds(widget.markers) ?? defaultBounds;
+
+    bounds = bounds.ensureMinimumSize(0.5);
+
+    var prevWidth = bounds.width;
+    var prevHeight = bounds.height;
+
+    var newWidth = vr.width;
+    var newHeight = vr.height;
+
+    var k = 2 *
+        ((prevHeight > prevWidth)
+            ? prevHeight / newHeight
+            : prevWidth / newWidth);
+    var z = k.abs() > 0.01 ? log(1 / k) / ln2 : 0;
+
+    if (z.abs() > 0.5) {
+      var oldZoom = await c.getZoomLevel();
+      var zoom = oldZoom + z;
+      if (zoom < 10) {
+        var target = bounds.center();
+        c.animateCamera(CameraUpdate.newLatLngZoom(target, zoom));
+        c.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant MapViewer oldWidget) {
+    updateCamera();
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    var bounds = calcBounds();
-    var target = LatLng(
-      (bounds.northeast.latitude + bounds.southwest.latitude) / 2.0,
-      (bounds.northeast.longitude + bounds.southwest.longitude) / 2.0,
-    );
+    var bounds = calcBounds(widget.markers) ?? defaultBounds;
+    var target = bounds.center();
 
     return GoogleMap(
+      zoomGesturesEnabled: true,
+      zoomControlsEnabled: true,
       initialCameraPosition: CameraPosition(
         target: target,
-        zoom: 10.0,
       ),
       cameraTargetBounds: CameraTargetBounds(
         bounds,
       ),
-      markers: markers,
+      markers: widget.markers,
+      onMapCreated: onMapCreated,
     );
   }
 }

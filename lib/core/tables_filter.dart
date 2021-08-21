@@ -3,7 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TablesFilter with ChangeNotifier {
-  IrnFilter filter = IrnFilter(serviceId: 1);
+  IrnFilter filter = IrnFilter(
+    serviceId: 1,
+    region: "Continente",
+    // districtId: 4,
+  );
 
   void update(
     int? serviceId,

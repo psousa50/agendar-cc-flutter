@@ -46,6 +46,9 @@ class _TablesByDateViewState extends State<TablesByDateView> {
           return groupedTables[dateOnly(date)] ?? [];
         },
         calendarFormat: CalendarFormat.month,
+        calendarStyle: CalendarStyle(
+          outsideDaysVisible: false,
+        ),
         headerStyle: HeaderStyle(
           formatButtonVisible: false,
           titleCentered: true,
