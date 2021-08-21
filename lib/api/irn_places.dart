@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../models.dart';
+import '../core/data/models.dart';
 
 var irnPlacesString = '''
 [

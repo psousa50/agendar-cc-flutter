@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../app_config.dart';
-import '../models.dart';
+import '../core/app_config.dart';
+import '../core/data/models.dart';
 
 class ReferenceData {
   final AppConfig _config;

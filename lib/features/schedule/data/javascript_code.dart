@@ -1,4 +1,4 @@
-import '../../models.dart';
+import '../../../core/data/models.dart';
 
 class JavaScriptCode {
   static String messageHtml(String message, String fontSize) {

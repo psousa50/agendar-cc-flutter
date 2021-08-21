@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'service_locator.dart';
+import 'core/service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'app_config.dart';
-import 'main_app.dart';
+import 'core/app_config.dart';
+import 'app.dart';
 
 AppConfig getConfig() {
   var configProd = AppConfig(schema: 'https', host: 'agendar-cc.herokuapp.com');
@@ -26,5 +26,5 @@ void initializeApp(AppConfig config) {
 void main() {
   var config = getConfig();
   initializeApp(config);
-  runApp(MainApp(config));
+  runApp(App(config));
 }

@@ -1,33 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:uuid/uuid.dart';
 
-import '../../service_locator.dart';
-
-class SelectLocationScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var markers = ServiceLocator.referenceData
-        .districts()
-        .where((d) => d.gpsLocation != null)
-        .map(
-          (d) => Marker(
-            markerId: MarkerId(Uuid().v4()),
-            position: LatLng(
-              d.gpsLocation!.latitude,
-              d.gpsLocation!.longitude,
-            ),
-            // icon: d.markerImage ?? BitmapDescriptor.defaultMarker,
-          ),
-        )
-        .toSet();
-    return MainlandMap(markers: markers);
-  }
-}
-
-class MainlandMap extends StatelessWidget {
+class MapViewer extends StatelessWidget {
   final Set<Marker> markers;
-  const MainlandMap({
+  const MapViewer({
     required this.markers,
   });
 

@@ -282,15 +282,16 @@ class IrnPlace {
 }
 
 class IrnFilter {
-  int? serviceId;
-  String? region;
-  int? districtId;
-  int? countyId;
-  String? placeName;
-  TimeOfDay? startTime;
-  TimeOfDay? endTime;
-  DateTime? startDate;
-  DateTime? endDate;
+  final int? serviceId;
+  final String? region;
+  final int? districtId;
+  final int? countyId;
+  final String? placeName;
+  final TimeOfDay? startTime;
+  final TimeOfDay? endTime;
+  final DateTime? startDate;
+  final DateTime? endDate;
+
   IrnFilter({
     this.serviceId,
     this.region,
@@ -302,4 +303,28 @@ class IrnFilter {
     this.startDate,
     this.endDate,
   });
+
+  IrnFilter copyWith({
+    int? serviceId,
+    String? region,
+    int? districtId,
+    int? countyId,
+    String? placeName,
+    TimeOfDay? startTime,
+    TimeOfDay? endTime,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) {
+    return IrnFilter(
+      serviceId: serviceId ?? this.serviceId,
+      region: region ?? this.region,
+      districtId: districtId ?? this.districtId,
+      countyId: countyId ?? this.countyId,
+      placeName: placeName ?? this.placeName,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+    );
+  }
 }

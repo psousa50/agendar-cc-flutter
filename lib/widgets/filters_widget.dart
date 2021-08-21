@@ -1,8 +1,8 @@
-import 'package:agendar_cc_flutter/service_locator.dart';
+import 'package:agendar_cc_flutter/core/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../models.dart';
+import '../core/data/models.dart';
 
 typedef FilterPicker = Function();
 
@@ -19,13 +19,13 @@ class _FiltersWidgetState extends State<FiltersWidget> {
 
   void pickRegion() {
     setState(() {
-      filter.region = "Acores";
+      // filter.region = "Acores";
     });
   }
 
   void pickDistrict() {
     setState(() {
-      filter.districtId = 4;
+      // filter.districtId = 4;
     });
   }
 

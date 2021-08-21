@@ -1,10 +1,10 @@
-import '../../models.dart';
-import 'javascript_code.dart';
+import '../../../core/data/models.dart';
+import '../data/javascript_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-class ScheduleScreen extends StatelessWidget {
-  const ScheduleScreen({Key? key}) : super(key: key);
+class SchedulePage extends StatelessWidget {
+  const SchedulePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
