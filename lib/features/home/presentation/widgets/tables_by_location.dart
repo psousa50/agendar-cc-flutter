@@ -1,9 +1,9 @@
+import "package:collection/collection.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../../core/data/helpers.dart';
 import '../../../../core/data/models.dart';
 import '../../../../widgets/map_viewer.dart';
 
@@ -22,7 +22,7 @@ class TablesByLocation extends StatefulWidget {
 
 class _TablesByLocationState extends State<TablesByLocation> {
   Set<Marker> toMarkers(IrnTables tables) {
-    var groupedTables = groupTables(
+    Map<String, List<IrnTable>> groupedTables = groupBy(
       tables.where((t) => t.gpsLocation != null),
       (t) => t.placeName,
     );

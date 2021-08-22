@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 
 class GpsLocation {
   final double latitude;
@@ -154,6 +155,23 @@ class UserDataState {
 
 typedef IrnTables = Iterable<IrnTable>;
 
+extension IrnTablesExtensoins on IrnTables {
+  bool c<T>(T v1, T? v2) => v2 == null || v1 == v2;
+
+  IrnTables clone() {
+    return List<IrnTable>.from(this);
+  }
+
+  IrnTables filterBy(IrnTableSelection ts) {
+    return where((t) =>
+        c(t.serviceId, ts.serviceId) &&
+        c(t.districtId, ts.districtId) &&
+        c(t.countyId, ts.countyId) &&
+        c(t.placeName, ts.placeName) &&
+        c(t.date, ts.date));
+  }
+}
+
 class IrnTable {
   final int countyId;
   final DateTime date;
@@ -210,7 +228,7 @@ class IrnTable {
       IrnTable.fromMap(json.decode(source));
 }
 
-class IrnTableResult {
+class IrnTableSelection {
   final int serviceId;
   final int countyId;
   final int districtId;
@@ -219,15 +237,35 @@ class IrnTableResult {
   final String timeSlot;
   final String tableNumber;
 
-  IrnTableResult({
+  IrnTableSelection({
     required this.serviceId,
     required this.countyId,
     required this.districtId,
     required this.date,
     required this.placeName,
-    required this.timeSlot,
-    required this.tableNumber,
+    this.timeSlot = "",
+    this.tableNumber = "",
   });
+
+  IrnTableSelection copyWith({
+    int? serviceId,
+    int? countyId,
+    int? districtId,
+    DateTime? date,
+    String? placeName,
+    String? timeSlot,
+    String? tableNumber,
+  }) {
+    return IrnTableSelection(
+      serviceId: serviceId ?? this.serviceId,
+      countyId: countyId ?? this.countyId,
+      districtId: districtId ?? this.districtId,
+      date: date ?? this.date,
+      placeName: placeName ?? this.placeName,
+      timeSlot: timeSlot ?? this.timeSlot,
+      tableNumber: tableNumber ?? this.tableNumber,
+    );
+  }
 }
 
 typedef IrnPlaces = List<IrnPlace>;
@@ -291,6 +329,7 @@ class IrnFilter {
   final TimeOfDay? endTime;
   final DateTime? startDate;
   final DateTime? endDate;
+  final DateTime? date;
 
   IrnFilter({
     this.serviceId,
@@ -302,6 +341,7 @@ class IrnFilter {
     this.endTime,
     this.startDate,
     this.endDate,
+    this.date,
   });
 
   IrnFilter copyWith({
@@ -314,6 +354,7 @@ class IrnFilter {
     TimeOfDay? endTime,
     DateTime? startDate,
     DateTime? endDate,
+    DateTime? date,
   }) {
     return IrnFilter(
       serviceId: serviceId ?? this.serviceId,
@@ -325,6 +366,21 @@ class IrnFilter {
       endTime: endTime ?? this.endTime,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
+      date: date ?? this.date,
     );
+  }
+}
+
+TimeOfDay timeOfDayFromSlot(String slot) {
+  return TimeOfDay(
+      hour: int.parse(slot.substring(0, 2)),
+      minute: int.parse(slot.substring(3, 5)));
+}
+
+var nf = NumberFormat('00');
+
+extension TimeOfDayExtension on TimeOfDay {
+  String toSlot8() {
+    return "${nf.format(hour)}:${nf.format(minute)}:00";
   }
 }

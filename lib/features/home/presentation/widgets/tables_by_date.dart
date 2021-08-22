@@ -1,7 +1,7 @@
+import "package:collection/collection.dart";
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../../core/data/helpers.dart';
 import '../../../../core/data/models.dart';
 
 class TablesByDateView extends StatefulWidget {
@@ -24,13 +24,20 @@ class _TablesByDateViewState extends State<TablesByDateView> {
 
   @override
   Widget build(BuildContext context) {
-    var groupedTables = groupTables(widget.tables, (IrnTable t) => t.date);
-    var minDate = (groupedTables.keys.length > 0
-        ? groupedTables.keys.reduce(
+    Map<DateTime, List<IrnTable>> groupedTables =
+        groupBy(widget.tables, (t) => t.date);
+    var groupedTablesByPlace = groupedTables.map(
+      (key, tables) => MapEntry(
+        key,
+        tables.map((t) => t.placeName).toSet().toList(),
+      ),
+    );
+    var minDate = (groupedTablesByPlace.keys.length > 0
+        ? groupedTablesByPlace.keys.reduce(
             (value, element) => element.isBefore(value) ? element : value)
         : null);
-    var maxDate = (groupedTables.keys.length > 0
-        ? groupedTables.keys.reduce(
+    var maxDate = (groupedTablesByPlace.keys.length > 0
+        ? groupedTablesByPlace.keys.reduce(
             (value, element) => element.isAfter(value) ? element : value)
         : null);
     return Container(
@@ -43,7 +50,7 @@ class _TablesByDateViewState extends State<TablesByDateView> {
         lastDay: maxDate ?? DateTime.now(),
         focusedDay: widget.selectedDate ?? minDate ?? DateTime.now(),
         eventLoader: (DateTime date) {
-          return groupedTables[dateOnly(date)] ?? [];
+          return groupedTablesByPlace[dateOnly(date)] ?? [];
         },
         calendarFormat: CalendarFormat.month,
         calendarStyle: CalendarStyle(

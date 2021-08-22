@@ -60,7 +60,7 @@ class JavaScriptCode {
     return html.replaceAll("\n", "");
   }
 
-  static String step1(IrnTableResult table) {
+  static String step1(IrnTableSelection table) {
     var html = '''
 
       function modalIsOpen() {
@@ -104,7 +104,7 @@ class JavaScriptCode {
     return html.replaceAll("\n", "");
   }
 
-  static step2(IrnTableResult table, IrnPlace place, UserDataState user) {
+  static step2(IrnTableSelection table, IrnPlace place, UserDataState user) {
     var html = '''
       var selects = document.getElementsByTagName("select");
       var selectFound;
@@ -174,7 +174,8 @@ class JavaScriptCode {
     return html.replaceAll("\n", "");
   }
 
-  static javascript(IrnTableResult table, IrnPlace place, UserDataState user) {
+  static javascript(
+      IrnTableSelection table, IrnPlace place, UserDataState user) {
     var html = '''
     try {
 

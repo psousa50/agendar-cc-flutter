@@ -12,11 +12,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppProviders(
-      child: MaterialApp(
-        home: Scaffold(
-          body: SafeArea(child: HomePage()),
-        ),
-      ),
+      child: HomePage(),
     );
   }
 }
