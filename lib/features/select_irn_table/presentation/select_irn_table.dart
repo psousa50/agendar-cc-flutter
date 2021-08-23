@@ -1,25 +1,12 @@
-import 'package:agendar_cc_flutter/features/schedule_at_irn/presentation/schedule_at_irn.dart';
-import 'package:agendar_cc_flutter/widgets/page_with_app_bar.dart';
-import "package:collection/collection.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:agendar_cc_flutter/core/data/models.dart';
-import 'package:agendar_cc_flutter/core/service_locator.dart';
-import 'package:intl/intl.dart';
-
-class IrnTableSelectionData {
-  final String service;
-  final String county;
-  final String place;
-  final String date;
-  const IrnTableSelectionData({
-    this.service = "...",
-    this.county = "...",
-    this.place = "...",
-    this.date = "...",
-  });
-}
+import '../../../core/data/models.dart';
+import '../../../core/service_locator.dart';
+import '../../../widgets/page_with_app_bar.dart';
+import '../../schedule_at_irn/presentation/schedule_at_irn.dart';
+import '../widgets/table_card_view.dart';
+import '../widgets/timeslots_selector.dart';
 
 class SelectIrnTable extends StatelessWidget {
   final IrnTables tables;
@@ -69,7 +56,7 @@ class SelectIrnTable extends StatelessWidget {
                 child: TableCardView(cardData),
               ),
               Expanded(
-                child: TimeTable(
+                child: TimeSlotsSelector(
                   tables: tables.filterBy(tableSelection),
                   onTimeSlotSelected: (slot) =>
                       onTimeSlotSelected(context, slot),
@@ -77,141 +64,6 @@ class SelectIrnTable extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class TimeTable extends StatelessWidget {
-  static var hourFormat = NumberFormat("00");
-  final Function(TimeOfDay) onTimeSlotSelected;
-
-  final IrnTables tables;
-  const TimeTable({
-    Key? key,
-    required this.tables,
-    required this.onTimeSlotSelected,
-  }) : super(key: key);
-
-  List<String> pad(List<String> slots, int count) {
-    return [
-      ...slots,
-      ...Iterable.generate(count - slots.length).map((_) => "")
-    ];
-  }
-
-  Widget buildSlot(BuildContext context, String slot) {
-    return Expanded(
-      flex: 10,
-      child: slot == ""
-          ? Container()
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: TextButton(
-                onPressed: () => onTimeSlotSelected(timeOfDayFromSlot(slot)),
-                style: TextButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  visualDensity: VisualDensity.compact,
-                ),
-                child: Text(
-                  slot,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-    );
-  }
-
-  Widget buildTimeRow(BuildContext context, int hour, List<String> slots) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(children: [
-        CircleAvatar(
-          child: Text(
-            "${hourFormat.format(hour)}",
-          ),
-        ),
-        Spacer(flex: 1),
-        ...pad(slots, 4).map((s) => buildSlot(context, s)).toList(),
-      ]),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var uniqueTimeSlots = tables
-        .map((t) => t.timeSlots.map((ts) => ts.substring(0, 5)))
-        .expand((t) => t)
-        .toSet()
-        .toList()
-          ..sort();
-    Map<int, List<String>> timeSlots =
-        groupBy(uniqueTimeSlots, (t) => int.parse(t.substring(0, 2)));
-    return ListView(
-      shrinkWrap: true,
-      children: timeSlots.keys
-          .map(
-            (k) => buildTimeRow(context, k, timeSlots[k]!),
-          )
-          .toList(),
-    );
-  }
-}
-
-class TableCardView extends StatelessWidget {
-  final IrnTableSelectionData tableCard;
-  const TableCardView(this.tableCard);
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      shadowColor: Colors.grey,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                tableCard.service,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  tableCard.county,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                tableCard.place,
-                style: TextStyle(
-                  fontSize: 12,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                tableCard.date,
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
