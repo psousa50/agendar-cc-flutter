@@ -12,7 +12,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppProviders(
-      child: HomePage(),
+      child: MaterialApp(home: HomePage()),
     );
   }
 }

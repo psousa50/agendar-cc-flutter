@@ -12,18 +12,12 @@ import '../widgets/tables_by_location.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MainPage(
-      child: PageWithAppBar(
-          title: "Mesas",
-          child: Column(
-            children: [
-              Consumer<TablesFilter>(
-                builder: (_, tablesFilter, __) => Expanded(
-                  child: HomePageView(tablesFilter),
-                ),
-              )
-            ],
-          )),
+    return PageWithAppBar(
+      title: "Mesas",
+      child: Consumer<TablesFilter>(
+        builder: (_, tablesFilter, __) =>
+            Container(child: HomePageView(tablesFilter)),
+      ),
     );
   }
 }
@@ -31,6 +25,26 @@ class HomePage extends StatelessWidget {
 class HomePageView extends StatelessWidget {
   final TablesFilter tablesFilter;
   const HomePageView(this.tablesFilter);
+
+  Widget buildInfoRow(String text) {
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [Text(text)],
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [Icon(Icons.navigate_next)],
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +61,22 @@ class HomePageView extends StatelessWidget {
               if (snapshot.hasError) {
                 return Container(child: Text(snapshot.error.toString()));
               } else {
-                return FutureBuilder(
-                    future: ServiceLocator.irnTablesFetcher
-                        .fetchIrnTables(tablesFilter.filter),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<IrnTables> snapshot) {
-                      var tables = snapshot.data ?? [];
-                      return TablesSelection(tables);
-                    });
+                return Container(
+                  child: Column(
+                    children: [
+                      buildInfoRow(tablesFilter.serviceDescription()),
+                      buildInfoRow(tablesFilter.locationDescription()),
+                      FutureBuilder(
+                          future: ServiceLocator.irnTablesFetcher
+                              .fetchIrnTables(tablesFilter.filter),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<IrnTables> snapshot) {
+                            var tables = snapshot.data ?? [];
+                            return Expanded(child: TablesSelection(tables));
+                          }),
+                    ],
+                  ),
+                );
               }
           }
         });
@@ -91,6 +113,8 @@ class _TablesSelectionState extends State<TablesSelection> {
     }
 
     void onPlaceSelected(String place) {
+      if (selectedDate == null) return;
+
       var table = filteredTables.where((t) => t.placeName == place);
       var tableSelection = IrnTableSelection(
           serviceId: table.first.serviceId,
@@ -98,8 +122,7 @@ class _TablesSelectionState extends State<TablesSelection> {
           countyId: table.first.countyId,
           placeName: place,
           date: selectedDate!);
-      Navigator.push(
-        context,
+      Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => SelectIrnTable(
                   tables: filteredTables.filterBy(tableSelection),

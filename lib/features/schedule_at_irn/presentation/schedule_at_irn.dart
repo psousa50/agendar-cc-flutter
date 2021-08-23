@@ -21,19 +21,15 @@ class ScheduleAtIrnPage extends StatelessWidget {
       phone: "961377576",
     );
 
-    return MainPage(
-      child: PageWithAppBar(
-          child: InAppWebView(
-            onLoadStop: (controller, url) async {
-              await controller.evaluateJavascript(
-                  source:
-                      JavaScriptCode.javascript(tableSelection, place, user));
-            },
-            initialUrlRequest: URLRequest(
-                url:
-                    Uri.parse("https://agendamento.irn.mj.pt/steps/step1.php")),
-          ),
-          title: "Agendamento"),
-    );
+    return PageWithAppBar(
+        child: InAppWebView(
+          onLoadStop: (controller, url) async {
+            await controller.evaluateJavascript(
+                source: JavaScriptCode.javascript(tableSelection, place, user));
+          },
+          initialUrlRequest: URLRequest(
+              url: Uri.parse("https://agendamento.irn.mj.pt/steps/step1.php")),
+        ),
+        title: "Agendamento");
   }
 }

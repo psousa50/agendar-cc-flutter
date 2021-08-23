@@ -48,8 +48,7 @@ class SelectIrnTable extends StatelessWidget {
       timeSlot: timeSlot,
       tableNumber: tableNumber,
     );
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
           builder: (context) => ScheduleAtIrnPage(fullTableSelection)),
     );
@@ -58,24 +57,25 @@ class SelectIrnTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cardData = from(tableSelection);
-    return MainPage(
-      child: PageWithAppBar(
-        title: "Seleccionar",
-        child: SafeArea(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Column(
-              children: [
-                TableCardView(cardData),
-                Expanded(
-                  child: TimeTable(
-                    tables: tables.filterBy(tableSelection),
-                    onTimeSlotSelected: (slot) =>
-                        onTimeSlotSelected(context, slot),
-                  ),
+    return PageWithAppBar(
+      title: "Seleccionar",
+      child: SafeArea(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: TableCardView(cardData),
+              ),
+              Expanded(
+                child: TimeTable(
+                  tables: tables.filterBy(tableSelection),
+                  onTimeSlotSelected: (slot) =>
+                      onTimeSlotSelected(context, slot),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -101,27 +101,44 @@ class TimeTable extends StatelessWidget {
     ];
   }
 
-  Widget buildSlot(String slot) {
+  Widget buildSlot(BuildContext context, String slot) {
     return Expanded(
       flex: 10,
-      child: TextButton(
-        onPressed: () => onTimeSlotSelected(timeOfDayFromSlot(slot)),
-        child: Text(
-          slot,
-          style: TextStyle(fontSize: 14),
-        ),
-      ),
+      child: slot == ""
+          ? Container()
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: TextButton(
+                onPressed: () => onTimeSlotSelected(timeOfDayFromSlot(slot)),
+                style: TextButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  visualDensity: VisualDensity.compact,
+                ),
+                child: Text(
+                  slot,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
     );
   }
 
-  Widget buildTimeRow(int hour, List<String> slots) {
-    return Row(children: [
-      Text(
-        "${hourFormat.format(hour)}",
-      ),
-      Spacer(flex: 1),
-      ...pad(slots, 5).map(buildSlot).toList(),
-    ]);
+  Widget buildTimeRow(BuildContext context, int hour, List<String> slots) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(children: [
+        CircleAvatar(
+          child: Text(
+            "${hourFormat.format(hour)}",
+          ),
+        ),
+        Spacer(flex: 1),
+        ...pad(slots, 4).map((s) => buildSlot(context, s)).toList(),
+      ]),
+    );
   }
 
   @override
@@ -138,7 +155,7 @@ class TimeTable extends StatelessWidget {
       shrinkWrap: true,
       children: timeSlots.keys
           .map(
-            (k) => buildTimeRow(k, timeSlots[k]!),
+            (k) => buildTimeRow(context, k, timeSlots[k]!),
           )
           .toList(),
     );
@@ -154,7 +171,7 @@ class TableCardView extends StatelessWidget {
       elevation: 5,
       shadowColor: Colors.grey,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
             Padding(
@@ -162,7 +179,9 @@ class TableCardView extends StatelessWidget {
               child: Text(
                 tableCard.service,
                 style: TextStyle(
-                    fontSize: 15, color: Theme.of(context).primaryColor),
+                  fontSize: 15,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
             ),
             Padding(
