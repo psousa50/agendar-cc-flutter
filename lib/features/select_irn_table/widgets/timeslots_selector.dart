@@ -33,14 +33,12 @@ class TimeSlotsSelector extends StatelessWidget {
               child: TextButton(
                 onPressed: () => onTimeSlotSelected(timeOfDayFromSlot(slot)),
                 style: TextButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
                   visualDensity: VisualDensity.compact,
                 ),
                 child: Text(
                   slot,
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -53,11 +51,12 @@ class TimeSlotsSelector extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(children: [
         CircleAvatar(
+          radius: 15,
           child: Text(
             "${hourFormat.format(hour)}",
+            style: TextStyle(fontSize: 12),
           ),
         ),
-        Spacer(flex: 1),
         ...pad(slots, 4).map((s) => buildSlot(context, s)).toList(),
       ]),
     );
@@ -73,13 +72,14 @@ class TimeSlotsSelector extends StatelessWidget {
           ..sort();
     Map<int, List<String>> timeSlots =
         groupBy(uniqueTimeSlots, (t) => int.parse(t.substring(0, 2)));
-    return ListView(
-      shrinkWrap: true,
-      children: timeSlots.keys
-          .map(
-            (k) => buildTimeRow(context, k, timeSlots[k]!),
-          )
-          .toList(),
+    var keys = timeSlots.keys.toList();
+    return ListView.separated(
+      itemBuilder: (c, i) => buildTimeRow(c, keys[i], timeSlots[keys[i]]!),
+      separatorBuilder: (_, __) => Divider(
+        height: 1,
+        thickness: 2,
+      ),
+      itemCount: keys.length,
     );
   }
 }

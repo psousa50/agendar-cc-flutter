@@ -9,10 +9,12 @@ import '../../../../widgets/map_viewer.dart';
 
 class TablesByLocation extends StatefulWidget {
   final IrnTables tables;
+  final String? selectedPlace;
   final Function(String) onPlaceSelected;
 
   const TablesByLocation({
     required this.tables,
+    required this.selectedPlace,
     required this.onPlaceSelected,
   });
 
@@ -34,6 +36,10 @@ class _TablesByLocationState extends State<TablesByLocation> {
       );
       return Marker(
         position: position,
+        consumeTapEvents: true,
+        icon: t.placeName == widget.selectedPlace
+            ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure)
+            : BitmapDescriptor.defaultMarker,
         markerId: MarkerId(
           Uuid().v4(),
         ),

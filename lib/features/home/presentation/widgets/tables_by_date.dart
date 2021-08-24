@@ -6,13 +6,15 @@ import '../../../../core/data/models.dart';
 
 class TablesByDateView extends StatefulWidget {
   final IrnTables tables;
-  final Function(DateTime) onDateSelected;
   final DateTime? selectedDate;
+  final DateTime? focusedDay;
+  final Function(DateTime, DateTime) onDateSelected;
 
   const TablesByDateView({
     required this.tables,
-    required this.onDateSelected,
     this.selectedDate,
+    this.focusedDay,
+    required this.onDateSelected,
   });
 
   @override
@@ -20,7 +22,15 @@ class TablesByDateView extends StatefulWidget {
 }
 
 class _TablesByDateViewState extends State<TablesByDateView> {
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+
   DateTime dateOnly(DateTime date) => DateTime(date.year, date.month, date.day);
+
+  void onFormatChanged(CalendarFormat calendarFormat) {
+    setState(() {
+      _calendarFormat = calendarFormat;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,37 +50,41 @@ class _TablesByDateViewState extends State<TablesByDateView> {
         ? groupedTablesByPlace.keys.reduce(
             (value, element) => element.isAfter(value) ? element : value)
         : null);
-    return Container(
-      child: TableCalendar(
-        selectedDayPredicate: (date) => dateOnly(date) == widget.selectedDate,
-        shouldFillViewport: true,
-        onDaySelected: (selectedDay, focusedDay) =>
-            widget.onDateSelected(dateOnly(selectedDay)),
-        firstDay: minDate ?? DateTime.now(),
-        lastDay: maxDate ?? DateTime.now(),
-        focusedDay: widget.selectedDate ?? minDate ?? DateTime.now(),
-        eventLoader: (DateTime date) {
-          return groupedTablesByPlace[dateOnly(date)] ?? [];
-        },
-        calendarFormat: CalendarFormat.month,
-        calendarStyle: CalendarStyle(
-          outsideDaysVisible: false,
-        ),
-        headerStyle: HeaderStyle(
-          formatButtonVisible: false,
-          titleCentered: true,
-        ),
-        calendarBuilders: CalendarBuilders(
-          selectedBuilder: (context, date, events) => Container(
-            margin: const EdgeInsets.all(4.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: Colors.orange,
-                borderRadius: BorderRadius.circular(50.0)),
-            child: Text(
-              date.day.toString(),
-              style: TextStyle(color: Colors.white),
-            ),
+    var firstDay = minDate ?? DateTime.now();
+    var lastDay = maxDate ?? DateTime.now();
+    var focusedDay = widget.focusedDay ?? maxDate ?? DateTime.now();
+    focusedDay = focusedDay.isAfter(lastDay) ? lastDay : focusedDay;
+    return TableCalendar(
+      selectedDayPredicate: (date) => dateOnly(date) == widget.selectedDate,
+      // shouldFillViewport: true,
+      onDaySelected: (selectedDay, focusedDay) => widget.onDateSelected(
+        dateOnly(selectedDay),
+        dateOnly(focusedDay),
+      ),
+      firstDay: firstDay,
+      lastDay: lastDay,
+      focusedDay: focusedDay,
+      eventLoader: (DateTime date) {
+        return groupedTablesByPlace[dateOnly(date)] ?? [];
+      },
+      calendarFormat: _calendarFormat,
+      calendarStyle: CalendarStyle(
+        outsideDaysVisible: false,
+      ),
+      headerStyle: HeaderStyle(
+        // formatButtonVisible: false,
+        titleCentered: true,
+      ),
+      onFormatChanged: onFormatChanged,
+      calendarBuilders: CalendarBuilders(
+        selectedBuilder: (context, date, events) => Container(
+          margin: const EdgeInsets.all(4.0),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: Colors.orange, borderRadius: BorderRadius.circular(50.0)),
+          child: Text(
+            date.day.toString(),
+            style: TextStyle(color: Colors.white),
           ),
         ),
       ),
