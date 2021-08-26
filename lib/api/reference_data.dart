@@ -40,6 +40,10 @@ class ReferenceData {
     return irnServices().firstWhere((e) => e.serviceId == serviceId);
   }
 
+  Region region(String regionId) {
+    return regions().firstWhere((e) => e.regionId == regionId);
+  }
+
   District district(int districtId) {
     return districts().firstWhere((e) => e.districtId == districtId);
   }

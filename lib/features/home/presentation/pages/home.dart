@@ -6,7 +6,7 @@ import '../../../../core/data/models.dart';
 import '../../../../core/service_locator.dart';
 import '../../../../core/tables_filter.dart';
 import '../../../../widgets/page_with_app_bar.dart';
-import '../../../tables_filter/presentation/filters_widget.dart';
+import '../../../tables_filter/presentation/tables_filter_page.dart';
 import '../widgets/filter_info.dart';
 import '../widgets/read_reference_data.dart';
 import '../widgets/tables_browser.dart';

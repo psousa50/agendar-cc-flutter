@@ -20,10 +20,12 @@ class SelectIrnTable extends StatelessWidget {
 
   IrnTableSelectionData from(IrnTableSelection t) {
     var r = ServiceLocator.referenceData;
+    var place = r.irnPlace(t.placeName);
     return IrnTableSelectionData(
       service: r.irnService(t.serviceId).name,
       county: r.county(t.countyId).name,
       place: t.placeName,
+      address: place.address,
       date: t.date.toIso8601String().substring(0, 10),
     );
   }

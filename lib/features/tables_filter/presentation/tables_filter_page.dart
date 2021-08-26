@@ -4,9 +4,7 @@ import 'package:flutter/widgets.dart';
 import '../../../core/data/irn_filter.dart';
 import '../../../core/service_locator.dart';
 import '../../../widgets/page_with_app_bar.dart';
-import 'select_item.dart';
-
-typedef FilterPicker = Function();
+import 'select_item_page.dart';
 
 class TablesFilterPage extends StatefulWidget {
   final IrnFilter filter;
@@ -32,7 +30,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     setState(() {
       filter = normalizeFilter(
         filter,
-        region: item?.name,
+        region: item?.id,
         districtId: filter.districtId,
         countyId: filter.countyId,
       );
@@ -152,7 +150,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
             ElevatedButton.icon(
               onPressed: clearAll,
               icon: Icon(Icons.clear_all),
-              label: Text("Limpar tudo"),
+              label: Text("Limpar Filtros"),
             )
           ],
         ),
@@ -164,7 +162,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
 class Section<T> extends StatelessWidget {
   final String title;
   final String value;
-  final FilterPicker filterPicker;
+  final Function filterPicker;
 
   const Section(
     this.title,

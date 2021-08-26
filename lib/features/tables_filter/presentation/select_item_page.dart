@@ -4,13 +4,6 @@ import 'package:grouped_list/grouped_list.dart';
 
 import '../../../../../core/data/extensions.dart';
 
-class ItemForSelection {
-  final String id;
-  final String name;
-  final String normalizedName;
-  ItemForSelection(this.id, this.name) : normalizedName = name.normalize();
-}
-
 class SelectItemPage extends StatefulWidget {
   final List<ItemForSelection> items;
   final String? selectedItem;
@@ -141,3 +134,11 @@ class SearchBox extends StatelessWidget {
     );
   }
 }
+
+class ItemForSelection {
+  final String id;
+  final String name;
+  final String normalizedName;
+  ItemForSelection(this.id, this.name) : normalizedName = name.normalize();
+}
+

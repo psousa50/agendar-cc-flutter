@@ -5,11 +5,13 @@ class IrnTableSelectionData {
   final String service;
   final String county;
   final String place;
+  final String address;
   final String date;
   const IrnTableSelectionData({
     this.service = "...",
     this.county = "...",
     this.place = "...",
+    this.address = "...",
     this.date = "...",
   });
 }
@@ -51,6 +53,15 @@ class TableCardView extends StatelessWidget {
                 tableCard.place,
                 style: TextStyle(
                   fontSize: 12,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                tableCard.address,
+                style: TextStyle(
+                  fontSize: 10,
                 ),
               ),
             ),

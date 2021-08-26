@@ -60,26 +60,56 @@ IrnFilter normalizeFilter(
   int? countyId,
 }) {
   var ref = ServiceLocator.referenceData;
-  districtId = region != null &&
-          districtId != null &&
-          !ref
-              .filterDistricts(region: region)
-              .map((d) => d.districtId)
-              .contains(districtId)
-      ? null
-      : districtId;
-  countyId = region != null &&
-          districtId != null &&
-          countyId != null &&
-          !ref
-              .filterCounties(region: region, districtId: districtId)
-              .map((c) => c.countyId)
-              .contains(countyId)
-      ? null
-      : countyId;
 
-  if (countyId != null) districtId = ref.county(countyId).districtId;
-  if (districtId != null) region = ref.district(districtId).region;
+  if (region != null && region != filter.region) {
+    if (districtId != null) {
+      if (!ref
+          .filterDistricts(region: region)
+          .map((d) => d.districtId)
+          .contains(districtId)) {
+        districtId = null;
+      }
+    }
+    if (countyId != null) {
+      if (!ref
+          .filterCounties(region: region, districtId: districtId)
+          .map((c) => c.countyId)
+          .contains(countyId)) {
+        countyId = null;
+      }
+    }
+  }
+
+  if (districtId != null && districtId != filter.districtId) {
+    region = ref.district(districtId).region;
+    if (countyId != null) {
+      if (!ref
+          .filterCounties(region: region, districtId: districtId)
+          .map((c) => c.countyId)
+          .contains(countyId)) {
+        countyId = null;
+      }
+    }
+  }
+
+  if (countyId != null && countyId != filter.countyId) {
+    districtId = ref.county(countyId).districtId;
+    region = ref.district(districtId).region;
+  }
+
+  if (districtId == null) {
+    var districts = ref.filterDistricts(region: region);
+    if (districts.length == 1) {
+      districtId = districts.first.districtId;
+    }
+  }
+
+  if (countyId == null) {
+    var counties = ref.filterCounties(region: region, districtId: districtId);
+    if (counties.length == 1) {
+      countyId = counties.first.countyId;
+    }
+  }
 
   return IrnFilter(
     serviceId: filter.serviceId,

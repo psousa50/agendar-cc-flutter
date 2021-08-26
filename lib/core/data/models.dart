@@ -279,10 +279,10 @@ class IrnTableSelection {
 typedef IrnPlaces = List<IrnPlace>;
 
 class IrnPlace {
-  final String address;
-  final int countyId;
-  final int districtId;
   final String name;
+  final int districtId;
+  final int countyId;
+  final String address;
   final String phone;
   final String postalCode;
   final GpsLocation? gpsLocation;
