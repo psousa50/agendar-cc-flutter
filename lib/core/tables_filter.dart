@@ -12,17 +12,25 @@ class TablesFilter with ChangeNotifier {
 
   String countyDescription() {
     var ref = ServiceLocator.referenceData;
+    var region = filter.region;
     var countyId = filter.countyId;
-    var districtId = filter.districtId;
-    return countyId == null
-        ? districtId == null
-            ? "Distrito: (Todos)"
-            : "Distrito: ${ref.district(districtId).name}"
-        : "Concelho: ${ref.county(countyId).name}";
+    var county = countyId != null ? ref.county(countyId) : null;
+    var districtId = filter.districtId ??
+        county?.districtId ??
+        (countyId != null ? ref.county(countyId).districtId : null);
+    var district = districtId != null ? ref.district(districtId) : null;
+    var regionName = region != null ? " - ${ref.region(region).name}" : "";
+    var districtName =
+        district != null ? district.name : "(Todos os distritos$regionName)";
+    if (county != null && county.name != districtName) {
+      districtName = "$districtName - ${county.name}";
+    }
+
+    return districtName;
   }
 
   String locationDescription() {
-    return "${filter.region} - ${countyDescription()}";
+    return "${countyDescription()}";
   }
 
   String serviceDescription() {
@@ -33,7 +41,7 @@ class TablesFilter with ChangeNotifier {
   void updateAll(
     IrnFilter other,
   ) {
-    filter = filter.copyWith(
+    filter = IrnFilter(
       serviceId: other.serviceId,
       region: other.region,
       districtId: other.districtId,

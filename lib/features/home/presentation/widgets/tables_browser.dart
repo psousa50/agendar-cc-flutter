@@ -16,23 +16,32 @@ class TablesBrowser extends StatefulWidget {
 class _TablesBrowserState extends State<TablesBrowser> {
   DateTime? _selectedDate;
   DateTime? _focusedDay;
-  String? selectedPlace;
+  String? _selectedPlace;
+
+  @override
+  void didUpdateWidget(covariant TablesBrowser oldWidget) {
+    _selectedDate = null;
+    _focusedDay = null;
+    _selectedPlace = null;
+    super.didUpdateWidget(oldWidget);
+  }
 
   void selectTable() {
-    if (_selectedDate == null || selectedPlace == null) return;
+    if (_selectedDate == null || _selectedPlace == null) return;
 
     var filteredTables = widget.tables.where(
       (t) =>
           (_selectedDate == null || t.date == _selectedDate) &&
-          (selectedPlace == null || t.placeName == selectedPlace),
+          (_selectedPlace == null || t.placeName == _selectedPlace),
     );
     var table = filteredTables.first;
     var tableSelection = IrnTableSelection(
         serviceId: table.serviceId,
         districtId: table.districtId,
         countyId: table.countyId,
-        placeName: selectedPlace!,
+        placeName: _selectedPlace!,
         date: _selectedDate!);
+
     Navigator.of(context).push(
       MaterialPageRoute(
           builder: (context) => SelectIrnTable(
@@ -49,13 +58,28 @@ class _TablesBrowserState extends State<TablesBrowser> {
         _selectedDate = _selectedDate == date ? null : date;
         _focusedDay = focusedDay;
       });
+      if (_selectedDate != null) {
+        var distinctPlaces = widget.tables
+            .where((t) => _selectedDate == null || t.date == _selectedDate)
+            .map((t) => t.placeName)
+            .toSet();
+        if (distinctPlaces.length == 1) _selectedPlace = distinctPlaces.first;
+      }
       selectTable();
     }
 
     void onPlaceSelected(String place) {
       setState(() {
-        selectedPlace = selectedPlace == place ? null : place;
+        _selectedPlace = _selectedPlace == place ? null : place;
       });
+      if (_selectedPlace != null) {
+        var distinctDates = widget.tables
+            .where(
+                (t) => _selectedPlace == null || t.placeName == _selectedPlace)
+            .map((t) => t.date)
+            .toSet();
+        if (distinctDates.length == 1) _selectedDate = distinctDates.first;
+      }
       selectTable();
     }
 
@@ -63,7 +87,7 @@ class _TablesBrowserState extends State<TablesBrowser> {
       children: [
         TablesByDateView(
           tables: widget.tables.where(
-            (t) => selectedPlace == null || t.placeName == selectedPlace,
+            (t) => _selectedPlace == null || t.placeName == _selectedPlace,
           ),
           selectedDate: _selectedDate,
           focusedDay: _focusedDay,
@@ -75,7 +99,7 @@ class _TablesBrowserState extends State<TablesBrowser> {
           child: TablesByLocation(
             tables: widget.tables
                 .where((t) => _selectedDate == null || t.date == _selectedDate),
-            selectedPlace: selectedPlace,
+            selectedPlace: _selectedPlace,
             onPlaceSelected: onPlaceSelected,
           ),
         )),
