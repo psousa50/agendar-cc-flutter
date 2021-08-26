@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:agendar_cc_flutter/core/data/irn_filter.dart';
 import 'package:agendar_cc_flutter/core/data/models.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../../core/data/extensions.dart';
 import '../../../core/data/models.dart';
 import '../../../core/service_locator.dart';
 import '../../../widgets/page_with_app_bar.dart';

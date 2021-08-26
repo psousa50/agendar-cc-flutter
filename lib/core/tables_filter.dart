@@ -1,14 +1,13 @@
-import 'package:agendar_cc_flutter/core/data/models.dart';
-import 'package:agendar_cc_flutter/core/service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'data/irn_filter.dart';
+import 'service_locator.dart';
 
 class TablesFilter with ChangeNotifier {
   IrnFilter filter = IrnFilter(
     serviceId: 1,
     region: "Continente",
-    // districtId: 3,
-    // countyId: 12,
   );
 
   String countyDescription() {
@@ -29,6 +28,24 @@ class TablesFilter with ChangeNotifier {
   String serviceDescription() {
     var ref = ServiceLocator.referenceData;
     return ref.irnService(filter.serviceId!).name;
+  }
+
+  void updateAll(
+    IrnFilter other,
+  ) {
+    filter = filter.copyWith(
+      serviceId: other.serviceId,
+      region: other.region,
+      districtId: other.districtId,
+      countyId: other.countyId,
+      placeName: other.placeName,
+      startTime: other.startTime,
+      endTime: other.endTime,
+      startDate: other.startDate,
+      endDate: other.endDate,
+    );
+
+    notifyListeners();
   }
 
   void update(

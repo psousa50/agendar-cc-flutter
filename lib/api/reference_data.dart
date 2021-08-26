@@ -7,7 +7,7 @@ import '../core/data/models.dart';
 
 class ReferenceData {
   final AppConfig _config;
-  Iterable<String> _regions = ["Continente", "Acores", "Madeira"];
+  Iterable<Region> _regions = [];
   Iterable<IrnService>? _irnServices;
   Iterable<District>? _districts;
   Iterable<County>? _counties;
@@ -16,7 +16,7 @@ class ReferenceData {
 
   ReferenceData(this._config);
 
-  Iterable<String> regions() {
+  Iterable<Region> regions() {
     return _regions;
   }
 
@@ -52,16 +52,21 @@ class ReferenceData {
     return irnPlaces().firstWhere((e) => e.name == name);
   }
 
-  Iterable<District> districtByRegion(String region) {
-    return districts().where((e) => e.region == region);
+  Iterable<District> filterDistricts({String? region}) {
+    return districts().where((d) => region == null || d.region == region);
   }
 
-  Iterable<County> countyByDistrictId(int districtId) {
-    return counties().where((e) => e.districtId == districtId);
-  }
-
-  Iterable<IrnPlace> irnPlacesByCountyId(int countyId) {
-    return irnPlaces().where((e) => e.countyId == countyId);
+  Iterable<County> filterCounties({String? region, int? districtId}) {
+    Iterable<District> districtsForRegion = districtId == null && region != null
+        ? filterDistricts(region: region)
+        : [];
+    var districtIdsForRegion = districtsForRegion.map((d) => d.districtId);
+    return districtId != null
+        ? counties().where((c) => c.districtId == districtId)
+        : region != null
+            ? counties()
+                .where((c) => districtIdsForRegion.contains(c.districtId))
+            : counties();
   }
 
   Future<Iterable<T>> _readArea<T>(
@@ -80,7 +85,12 @@ class ReferenceData {
   }
 
   Future<void> _fetchStaticData() async {
-    _regions = ["Continente", "Acores", "Madeira"];
+    _regions = [
+      Region(regionId: "Continente", name: "Continente"),
+      Region(regionId: "Acores", name: "Açores"),
+      Region(regionId: "Madeira", name: "Madeira"),
+    ];
+
     _irnServices = await _readArea("irnServices", (d) => IrnService.fromMap(d));
     _districts = await _readArea("districts", (d) => District.fromMap(d));
     _counties = await _readArea("counties", (d) => County.fromMap(d));

@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
 
 class GpsLocation {
   final double latitude;
@@ -30,6 +28,16 @@ class GpsLocation {
 
   factory GpsLocation.fromJson(String source) =>
       GpsLocation.fromMap(json.decode(source));
+}
+
+class Region {
+  final String regionId;
+  final String name;
+
+  Region({
+    required this.regionId,
+    required this.name,
+  });
 }
 
 class IrnService {
@@ -317,70 +325,4 @@ class IrnPlace {
 
   factory IrnPlace.fromJson(String source) =>
       IrnPlace.fromMap(json.decode(source));
-}
-
-class IrnFilter {
-  final int? serviceId;
-  final String? region;
-  final int? districtId;
-  final int? countyId;
-  final String? placeName;
-  final TimeOfDay? startTime;
-  final TimeOfDay? endTime;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final DateTime? date;
-
-  IrnFilter({
-    this.serviceId,
-    this.region,
-    this.districtId,
-    this.countyId,
-    this.placeName,
-    this.startTime,
-    this.endTime,
-    this.startDate,
-    this.endDate,
-    this.date,
-  });
-
-  IrnFilter copyWith({
-    int? serviceId,
-    String? region,
-    int? districtId,
-    int? countyId,
-    String? placeName,
-    TimeOfDay? startTime,
-    TimeOfDay? endTime,
-    DateTime? startDate,
-    DateTime? endDate,
-    DateTime? date,
-  }) {
-    return IrnFilter(
-      serviceId: serviceId ?? this.serviceId,
-      region: region ?? this.region,
-      districtId: districtId ?? this.districtId,
-      countyId: countyId ?? this.countyId,
-      placeName: placeName ?? this.placeName,
-      startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      date: date ?? this.date,
-    );
-  }
-}
-
-TimeOfDay timeOfDayFromSlot(String slot) {
-  return TimeOfDay(
-      hour: int.parse(slot.substring(0, 2)),
-      minute: int.parse(slot.substring(3, 5)));
-}
-
-var nf = NumberFormat('00');
-
-extension TimeOfDayExtension on TimeOfDay {
-  String toSlot8() {
-    return "${nf.format(hour)}:${nf.format(minute)}:00";
-  }
 }
