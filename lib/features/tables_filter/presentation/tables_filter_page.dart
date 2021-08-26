@@ -25,6 +25,15 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     super.initState();
   }
 
+  void onServiceSelected(ItemForSelection? item) {
+    Navigator.of(context).pop();
+    setState(() {
+      filter = filter.copyWith(
+        serviceId: item == null ? null : int.parse(item.id),
+      );
+    });
+  }
+
   void onRegionSelected(ItemForSelection? item) {
     Navigator.of(context).pop();
     setState(() {
@@ -59,6 +68,21 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
         countyId: item == null ? null : int.parse(item.id),
       );
     });
+  }
+
+  void pickService() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => SelectItemPage(
+          items: ServiceLocator.referenceData
+              .irnServices()
+              .map((s) => ItemForSelection(
+                    s.serviceId.toString(),
+                    s.name,
+                  ))
+              .toList(),
+          selectedItem: filter.serviceId.toString(),
+          onItemSelected: onServiceSelected),
+    ));
   }
 
   void pickRegion() {
@@ -121,6 +145,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
 
   @override
   Widget build(BuildContext context) {
+    var serviceId = filter.serviceId;
     var region = filter.region;
     var districtId = filter.districtId;
     var countyId = filter.countyId;
@@ -133,6 +158,11 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
         color: Colors.grey.shade300,
         child: Column(
           children: [
+            Section(
+              "Serviço",
+              serviceId == null ? "Todos" : refData.irnService(serviceId).name,
+              pickService,
+            ),
             Section(
               "Região",
               region ?? "Todas",

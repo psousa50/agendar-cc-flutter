@@ -52,7 +52,7 @@ class _TablesByDateViewState extends State<TablesByDateView> {
         : null);
     var firstDay = minDate ?? DateTime.now();
     var lastDay = maxDate ?? DateTime.now();
-    var focusedDay = widget.focusedDay ?? maxDate ?? DateTime.now();
+    var focusedDay = widget.focusedDay ?? minDate ?? DateTime.now();
     focusedDay = focusedDay.isBefore(firstDay) ? firstDay : focusedDay;
     focusedDay = focusedDay.isAfter(lastDay) ? lastDay : focusedDay;
     return TableCalendar(

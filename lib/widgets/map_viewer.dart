@@ -102,6 +102,7 @@ class _MapViewerState extends State<MapViewer> {
     var vr = await c.getVisibleRegion();
     var bounds = calcBounds(widget.markers) ?? defaultBounds;
 
+    bounds = bounds.inflateByPercentage(0.1);
     bounds = bounds.ensureMinimumSize(0.005);
 
     var wantedWidth = bounds.width;
@@ -116,9 +117,10 @@ class _MapViewerState extends State<MapViewer> {
             : wantedWidth / currentWidth);
     var z = k.abs() > 0.000001 ? log(1 / k) / ln2 : 0;
 
-    if (z.abs() > 0.5) {
+    if (z.abs() > 0.8) {
       var oldZoom = await c.getZoomLevel();
       var zoom = oldZoom + z;
+      print("zoom: $zoom");
       if (zoom < 15) {
         var target = bounds.center();
         c.animateCamera(CameraUpdate.newLatLngZoom(target, zoom));

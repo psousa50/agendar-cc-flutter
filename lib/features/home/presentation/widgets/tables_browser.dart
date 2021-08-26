@@ -63,13 +63,13 @@ class _TablesBrowserState extends State<TablesBrowser> {
         _selectedDate = _selectedDate == date ? null : date;
         _focusedDay = focusedDay;
       });
-      if (_selectedDate != null) {
-        var distinctPlaces = widget.tables
-            .where((t) => _selectedDate == null || t.date == _selectedDate)
-            .map((t) => t.placeName)
-            .toSet();
-        if (distinctPlaces.length == 1) _selectedPlace = distinctPlaces.first;
-      }
+      // if (_selectedDate != null) {
+      //   var distinctPlaces = widget.tables
+      //       .where((t) => _selectedDate == null || t.date == _selectedDate)
+      //       .map((t) => t.placeName)
+      //       .toSet();
+      //   if (distinctPlaces.length == 1) _selectedPlace = distinctPlaces.first;
+      // }
       selectTable();
     }
 
@@ -77,14 +77,14 @@ class _TablesBrowserState extends State<TablesBrowser> {
       setState(() {
         _selectedPlace = _selectedPlace == place ? null : place;
       });
-      if (_selectedPlace != null) {
-        var distinctDates = widget.tables
-            .where(
-                (t) => _selectedPlace == null || t.placeName == _selectedPlace)
-            .map((t) => t.date)
-            .toSet();
-        if (distinctDates.length == 1) _selectedDate = distinctDates.first;
-      }
+      // if (_selectedPlace != null) {
+      //   var distinctDates = widget.tables
+      //       .where(
+      //           (t) => _selectedPlace == null || t.placeName == _selectedPlace)
+      //       .map((t) => t.date)
+      //       .toSet();
+      //   if (distinctDates.length == 1) _selectedDate = distinctDates.first;
+      // }
       selectTable();
     }
 
