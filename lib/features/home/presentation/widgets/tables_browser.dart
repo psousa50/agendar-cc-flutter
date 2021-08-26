@@ -54,6 +54,11 @@ class _TablesBrowserState extends State<TablesBrowser> {
   @override
   Widget build(BuildContext context) {
     void onDateSelected(DateTime date, DateTime focusedDay) {
+      if (_selectedDate != date &&
+          widget.tables.where((t) => t.date == date).isEmpty) {
+        return;
+      }
+
       setState(() {
         _selectedDate = _selectedDate == date ? null : date;
         _focusedDay = focusedDay;
