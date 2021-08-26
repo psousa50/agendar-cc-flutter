@@ -1,8 +1,8 @@
-import 'package:agendar_cc_flutter/widgets/page_with_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 
 import '../../../../../core/data/extensions.dart';
+import '../../../widgets/page_with_app_bar.dart';
 
 class SelectItemPage extends StatefulWidget {
   final List<ItemForSelection> items;
@@ -141,4 +141,3 @@ class ItemForSelection {
   final String normalizedName;
   ItemForSelection(this.id, this.name) : normalizedName = name.normalize();
 }
-

@@ -1,6 +1,7 @@
-import 'package:agendar_cc_flutter/core/service_locator.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+
+import 'service_locator.dart';
 
 class AppProviders extends StatelessWidget {
   final Widget child;

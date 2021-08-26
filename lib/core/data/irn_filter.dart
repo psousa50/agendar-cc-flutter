@@ -1,5 +1,6 @@
-import 'package:agendar_cc_flutter/core/service_locator.dart';
 import 'package:flutter/material.dart';
+
+import '../service_locator.dart';
 
 class IrnFilter {
   final int? serviceId;

@@ -1,10 +1,10 @@
-import 'package:agendar_cc_flutter/core/service_locator.dart';
-import 'package:agendar_cc_flutter/widgets/page_with_app_bar.dart';
-
-import '../../../core/data/models.dart';
-import '../data/javascript_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
+import '../../../core/data/models.dart';
+import '../../../core/service_locator.dart';
+import '../../../widgets/page_with_app_bar.dart';
+import '../data/javascript_code.dart';
 
 class ScheduleAtIrnPage extends StatelessWidget {
   final IrnTableSelection tableSelection;

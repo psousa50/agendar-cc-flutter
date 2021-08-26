@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:agendar_cc_flutter/core/data/irn_filter.dart';
-import 'package:agendar_cc_flutter/core/data/models.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../core/app_config.dart';
+import '../core/data/irn_filter.dart';
+import '../core/data/models.dart';
 
 class IrnTablesFetcher {
   final AppConfig _config;

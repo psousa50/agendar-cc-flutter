@@ -1,9 +1,8 @@
-import 'package:agendar_cc_flutter/api/irn_tables_fetcher.dart';
-
-import '../api/reference_data.dart';
-import 'app_config.dart';
 import 'package:get_it/get_it.dart';
 
+import '../api/irn_tables_fetcher.dart';
+import '../api/reference_data.dart';
+import 'app_config.dart';
 import 'tables_filter.dart';
 
 class ServiceLocator {
