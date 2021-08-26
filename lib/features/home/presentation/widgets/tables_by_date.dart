@@ -55,9 +55,10 @@ class _TablesByDateViewState extends State<TablesByDateView> {
     var focusedDay = widget.focusedDay ?? minDate ?? DateTime.now();
     focusedDay = focusedDay.isBefore(firstDay) ? firstDay : focusedDay;
     focusedDay = focusedDay.isAfter(lastDay) ? lastDay : focusedDay;
+
     return TableCalendar(
       selectedDayPredicate: (date) => dateOnly(date) == widget.selectedDate,
-      // shouldFillViewport: true,
+      shouldFillViewport: true,
       onDaySelected: (selectedDay, focusedDay) => widget.onDateSelected(
         dateOnly(selectedDay),
         dateOnly(focusedDay),
@@ -73,7 +74,7 @@ class _TablesByDateViewState extends State<TablesByDateView> {
         outsideDaysVisible: false,
       ),
       headerStyle: HeaderStyle(
-        // formatButtonVisible: false,
+        formatButtonVisible: false,
         titleCentered: true,
       ),
       onFormatChanged: onFormatChanged,

@@ -120,7 +120,6 @@ class _MapViewerState extends State<MapViewer> {
     if (z.abs() > 0.8) {
       var oldZoom = await c.getZoomLevel();
       var zoom = oldZoom + z;
-      print("zoom: $zoom");
       if (zoom < 15) {
         var target = bounds.center();
         c.animateCamera(CameraUpdate.newLatLngZoom(target, zoom));

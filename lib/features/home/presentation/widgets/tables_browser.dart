@@ -90,13 +90,17 @@ class _TablesBrowserState extends State<TablesBrowser> {
 
     return Column(
       children: [
-        TablesByDateView(
-          tables: widget.tables.where(
-            (t) => _selectedPlace == null || t.placeName == _selectedPlace,
+        ConstrainedBox(
+          constraints: BoxConstraints.tightFor(
+              height: MediaQuery.of(context).size.height * .3),
+          child: TablesByDateView(
+            tables: widget.tables.where(
+              (t) => _selectedPlace == null || t.placeName == _selectedPlace,
+            ),
+            selectedDate: _selectedDate,
+            focusedDay: _focusedDay,
+            onDateSelected: onDateSelected,
           ),
-          selectedDate: _selectedDate,
-          focusedDay: _focusedDay,
-          onDateSelected: onDateSelected,
         ),
         Expanded(
             child: Padding(
