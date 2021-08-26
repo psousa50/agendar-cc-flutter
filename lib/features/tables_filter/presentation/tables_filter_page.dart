@@ -126,6 +126,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     var countyId = filter.countyId;
     return PageWithAppBar(
       title: "Filtros",
+      closeButton: true,
       actions: [IconButton(onPressed: onApplyFilter, icon: Icon(Icons.done))],
       child: Container(
         padding: EdgeInsets.all(8),

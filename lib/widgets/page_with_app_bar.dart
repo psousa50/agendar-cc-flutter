@@ -4,20 +4,31 @@ class PageWithAppBar extends StatelessWidget {
   final Widget child;
   final String title;
   final List<Widget>? actions;
+  final bool closeButton;
   const PageWithAppBar({
     Key? key,
     required this.child,
     required this.title,
     this.actions,
+    this.closeButton = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 40,
+        // toolbarHeight: 40,
         title: Text(title),
         actions: actions,
+        automaticallyImplyLeading: !closeButton,
+        leading: closeButton
+            ? IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(Icons.close),
+              )
+            : null,
       ),
       body: child,
     );
