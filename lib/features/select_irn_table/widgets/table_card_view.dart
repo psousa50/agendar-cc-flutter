@@ -21,9 +21,9 @@ class TableCardView extends StatelessWidget {
   const TableCardView(this.tableCard);
   @override
   Widget build(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
     return Card(
       elevation: 5,
-      shadowColor: Colors.grey,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -32,46 +32,34 @@ class TableCardView extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 tableCard.service,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Theme.of(context).primaryColor,
-                ),
+                style: textTheme.subtitle1,
               ),
             ),
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   tableCard.county,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: textTheme.subtitle1,
                 )),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 tableCard.place,
-                style: TextStyle(
-                  fontSize: 12,
-                ),
+                style: textTheme.bodyText1,
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 tableCard.address,
-                style: TextStyle(
-                  fontSize: 10,
-                ),
+                style: textTheme.caption,
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 tableCard.date,
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+                style: textTheme.subtitle1,
               ),
             ),
           ],

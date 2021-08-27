@@ -83,10 +83,12 @@ class _TablesByDateViewState extends State<TablesByDateView> {
           margin: const EdgeInsets.all(4.0),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: Colors.orange, borderRadius: BorderRadius.circular(50.0)),
+            color: Theme.of(context).selectedRowColor,
+            borderRadius: BorderRadius.circular(50.0),
+          ),
           child: Text(
             date.day.toString(),
-            style: TextStyle(color: Colors.white),
+            style: Theme.of(context).accentTextTheme.bodyText1,
           ),
         ),
       ),

@@ -38,8 +38,8 @@ class _TablesByLocationState extends State<TablesByLocation> {
         position: position,
         consumeTapEvents: true,
         icon: t.placeName == widget.selectedPlace
-            ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure)
-            : BitmapDescriptor.defaultMarker,
+            ? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed)
+            : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
         markerId: MarkerId(
           Uuid().v4(),
         ),

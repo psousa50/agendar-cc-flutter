@@ -17,7 +17,6 @@ class PageWithAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // toolbarHeight: 40,
         title: Text(title),
         actions: actions,
         automaticallyImplyLeading: !closeButton,

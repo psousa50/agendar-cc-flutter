@@ -7,7 +7,7 @@ import '../../../core/data/extensions.dart';
 import '../../../core/data/models.dart';
 
 class TimeSlotsSelector extends StatelessWidget {
-  static var hourFormat = NumberFormat("00");
+  static var twoDigitsFormat = NumberFormat("00");
   final Function(TimeOfDay) onTimeSlotSelected;
 
   final IrnTables tables;
@@ -51,12 +51,9 @@ class TimeSlotsSelector extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(children: [
-        CircleAvatar(
-          radius: 15,
-          child: Text(
-            "${hourFormat.format(hour)}",
-            style: TextStyle(fontSize: 12),
-          ),
+        Text(
+          "${twoDigitsFormat.format(hour)}",
+          style: Theme.of(context).textTheme.subtitle1,
         ),
         ...pad(slots, 4).map((s) => buildSlot(context, s)).toList(),
       ]),

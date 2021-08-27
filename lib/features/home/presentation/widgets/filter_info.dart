@@ -6,7 +6,7 @@ class FilterInfo extends StatelessWidget {
   final TablesFilter tablesFilter;
   const FilterInfo(this.tablesFilter);
 
-  Widget buildInfoRow(String text, TextStyle textStyle) {
+  Widget buildInfoRow(String text, TextStyle? textStyle) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
@@ -22,19 +22,13 @@ class FilterInfo extends StatelessWidget {
     return Column(
       children: [
         buildInfoRow(
-            tablesFilter.serviceDescription(),
-            TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            )),
+          tablesFilter.serviceDescription(),
+          Theme.of(context).textTheme.subtitle1,
+        ),
         buildInfoRow(
-            tablesFilter.locationDescription(),
-            TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            )),
+          tablesFilter.locationDescription(),
+          Theme.of(context).textTheme.subtitle2,
+        )
       ],
     );
   }

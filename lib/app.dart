@@ -1,3 +1,4 @@
+import 'themes.dart';
 import 'package:flutter/material.dart';
 
 import 'core/app_config.dart';
@@ -11,8 +12,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var useDarkTheme = false;
     return AppProviders(
-      child: MaterialApp(home: HomePage()),
+      child: MaterialApp(
+        home: HomePage(),
+        theme: useDarkTheme ? darkTheme : lightTheme,
+      ),
     );
   }
 }

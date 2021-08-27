@@ -155,7 +155,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
       actions: [IconButton(onPressed: onApplyFilter, icon: Icon(Icons.done))],
       child: Container(
         padding: EdgeInsets.all(8),
-        color: Colors.grey.shade300,
+        color: Theme.of(context).dividerColor,
         child: Column(
           children: [
             Section(
@@ -178,7 +178,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
                 "Concelho",
                 countyId == null ? "Todos" : refData.county(countyId).name,
                 pickCounty),
-            ElevatedButton.icon(
+            TextButton.icon(
               onPressed: clearAll,
               icon: Icon(Icons.clear_all),
               label: Text("Limpar Filtros"),
@@ -210,7 +210,10 @@ class Section<T> extends StatelessWidget {
             Expanded(
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(title, style: TextStyle(fontSize: 16)),
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
               ),
             ),
           ],
@@ -221,15 +224,23 @@ class Section<T> extends StatelessWidget {
             children: [
               Container(
                 alignment: Alignment.centerLeft,
-                color: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                child: Text(value, style: TextStyle(fontSize: 16)),
+                color: Theme.of(context).scaffoldBackgroundColor,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 10,
+                ),
+                child: Text(
+                  value,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
               ),
               Container(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.centerRight,
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Icon(Icons.navigate_next),
+                child: Icon(
+                  Icons.navigate_next,
+                  color: Theme.of(context).textTheme.bodyText1!.color,
+                ),
               ),
             ],
           ),

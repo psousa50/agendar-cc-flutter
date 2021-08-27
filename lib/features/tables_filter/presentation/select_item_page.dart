@@ -33,13 +33,10 @@ class _SelectItemPageState extends State<SelectItemPage> {
     Widget buildSeparator(String s) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-        color: Colors.grey.shade300,
+        color: Theme.of(context).dividerColor,
         child: Text(
           s,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.subtitle1,
         ),
       );
     }
@@ -61,7 +58,11 @@ class _SelectItemPageState extends State<SelectItemPage> {
                   ),
                 ),
               ),
-              if (widget.selectedItem == item.id) Icon(Icons.check),
+              if (widget.selectedItem == item.id)
+                Icon(
+                  Icons.check,
+                  color: Theme.of(context).accentColor,
+                ),
             ],
           ),
         ),
@@ -88,7 +89,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
                   height: 1,
                   indent: 10,
                   endIndent: 10,
-                  color: Colors.grey,
+                  color: Theme.of(context).dividerColor,
                 ),
               ),
             ),
@@ -119,12 +120,12 @@ class SearchBox extends StatelessWidget {
             isDense: true,
             prefixIconConstraints: BoxConstraints(),
             hintText: "Search",
-            hintStyle: TextStyle(color: Colors.grey),
+            hintStyle: TextStyle(color: Theme.of(context).hintColor),
             prefixIcon: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Icon(
                 Icons.search,
-                color: Colors.grey,
+                color: Theme.of(context).hintColor,
                 size: 20,
               ),
             ),

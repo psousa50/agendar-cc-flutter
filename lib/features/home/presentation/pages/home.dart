@@ -1,3 +1,4 @@
+import 'package:agendar_cc_flutter/widgets/page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +18,8 @@ class HomePage extends StatelessWidget {
   }
 
   void filter(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => TablesFilterPage(
+    Navigator.of(context).push(SlideBottomTopTransition(
+      child: TablesFilterPage(
         filter: ServiceLocator.tablesFilter.filter,
         onFilterChanged: onFilterChanged,
       ),
