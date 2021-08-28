@@ -26,21 +26,17 @@ class _TablesBrowserState extends State<TablesBrowser> {
     super.didUpdateWidget(oldWidget);
   }
 
-  void selectTable() {
-    if (_selectedDate == null || _selectedPlace == null) return;
-
+  void selectTable(DateTime selectedDate, String selectedPlace) {
     var filteredTables = widget.tables.where(
-      (t) =>
-          (_selectedDate == null || t.date == _selectedDate) &&
-          (_selectedPlace == null || t.placeName == _selectedPlace),
+      (t) => t.date == selectedDate && t.placeName == selectedPlace,
     );
     var table = filteredTables.first;
     var tableSelection = IrnTableSelection(
       serviceId: table.serviceId,
       districtId: table.districtId,
       countyId: table.countyId,
-      placeName: _selectedPlace!,
-      date: _selectedDate!,
+      placeName: selectedPlace,
+      date: selectedDate,
     );
 
     Navigator.of(context).push(
@@ -58,33 +54,28 @@ class _TablesBrowserState extends State<TablesBrowser> {
       return;
     }
 
+    var newSelectedDate = _selectedDate == date ? null : date;
+
     setState(() {
-      _selectedDate = _selectedDate == date ? null : date;
+      _selectedDate = newSelectedDate;
       _focusedDay = focusedDay;
     });
-    // if (_selectedDate != null) {
-    //   var distinctPlaces = widget.tables
-    //       .where((t) => _selectedDate == null || t.date == _selectedDate)
-    //       .map((t) => t.placeName)
-    //       .toSet();
-    //   if (distinctPlaces.length == 1) _selectedPlace = distinctPlaces.first;
-    // }
-    selectTable();
+
+    if (newSelectedDate != null && _selectedPlace != null) {
+      selectTable(newSelectedDate, _selectedPlace!);
+    }
   }
 
   void onPlaceSelected(String place) {
+    var newSelectedPlace = _selectedPlace == place ? null : place;
+
     setState(() {
-      _selectedPlace = _selectedPlace == place ? null : place;
+      _selectedPlace = newSelectedPlace;
     });
-    // if (_selectedPlace != null) {
-    //   var distinctDates = widget.tables
-    //       .where(
-    //           (t) => _selectedPlace == null || t.placeName == _selectedPlace)
-    //       .map((t) => t.date)
-    //       .toSet();
-    //   if (distinctDates.length == 1) _selectedDate = distinctDates.first;
-    // }
-    selectTable();
+
+    if (newSelectedPlace != null && _selectedDate != null) {
+      selectTable(_selectedDate!, newSelectedPlace);
+    }
   }
 
   @override
