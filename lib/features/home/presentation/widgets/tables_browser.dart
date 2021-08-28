@@ -36,11 +36,12 @@ class _TablesBrowserState extends State<TablesBrowser> {
     );
     var table = filteredTables.first;
     var tableSelection = IrnTableSelection(
-        serviceId: table.serviceId,
-        districtId: table.districtId,
-        countyId: table.countyId,
-        placeName: _selectedPlace!,
-        date: _selectedDate!);
+      serviceId: table.serviceId,
+      districtId: table.districtId,
+      countyId: table.countyId,
+      placeName: _selectedPlace!,
+      date: _selectedDate!,
+    );
 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -51,43 +52,43 @@ class _TablesBrowserState extends State<TablesBrowser> {
     );
   }
 
+  void onDateSelected(DateTime date, DateTime focusedDay) {
+    if (_selectedDate != date &&
+        widget.tables.where((t) => t.date == date).isEmpty) {
+      return;
+    }
+
+    setState(() {
+      _selectedDate = _selectedDate == date ? null : date;
+      _focusedDay = focusedDay;
+    });
+    // if (_selectedDate != null) {
+    //   var distinctPlaces = widget.tables
+    //       .where((t) => _selectedDate == null || t.date == _selectedDate)
+    //       .map((t) => t.placeName)
+    //       .toSet();
+    //   if (distinctPlaces.length == 1) _selectedPlace = distinctPlaces.first;
+    // }
+    selectTable();
+  }
+
+  void onPlaceSelected(String place) {
+    setState(() {
+      _selectedPlace = _selectedPlace == place ? null : place;
+    });
+    // if (_selectedPlace != null) {
+    //   var distinctDates = widget.tables
+    //       .where(
+    //           (t) => _selectedPlace == null || t.placeName == _selectedPlace)
+    //       .map((t) => t.date)
+    //       .toSet();
+    //   if (distinctDates.length == 1) _selectedDate = distinctDates.first;
+    // }
+    selectTable();
+  }
+
   @override
   Widget build(BuildContext context) {
-    void onDateSelected(DateTime date, DateTime focusedDay) {
-      if (_selectedDate != date &&
-          widget.tables.where((t) => t.date == date).isEmpty) {
-        return;
-      }
-
-      setState(() {
-        _selectedDate = _selectedDate == date ? null : date;
-        _focusedDay = focusedDay;
-      });
-      // if (_selectedDate != null) {
-      //   var distinctPlaces = widget.tables
-      //       .where((t) => _selectedDate == null || t.date == _selectedDate)
-      //       .map((t) => t.placeName)
-      //       .toSet();
-      //   if (distinctPlaces.length == 1) _selectedPlace = distinctPlaces.first;
-      // }
-      selectTable();
-    }
-
-    void onPlaceSelected(String place) {
-      setState(() {
-        _selectedPlace = _selectedPlace == place ? null : place;
-      });
-      // if (_selectedPlace != null) {
-      //   var distinctDates = widget.tables
-      //       .where(
-      //           (t) => _selectedPlace == null || t.placeName == _selectedPlace)
-      //       .map((t) => t.date)
-      //       .toSet();
-      //   if (distinctDates.length == 1) _selectedDate = distinctDates.first;
-      // }
-      selectTable();
-    }
-
     return Column(
       children: [
         ConstrainedBox(

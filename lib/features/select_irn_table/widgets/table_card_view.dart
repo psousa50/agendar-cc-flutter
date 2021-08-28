@@ -7,12 +7,14 @@ class IrnTableSelectionData {
   final String place;
   final String address;
   final String date;
+  final String timeSlot;
   const IrnTableSelectionData({
-    this.service = "...",
-    this.county = "...",
-    this.place = "...",
-    this.address = "...",
-    this.date = "...",
+    required this.service,
+    required this.county,
+    required this.place,
+    required this.address,
+    required this.date,
+    required this.timeSlot,
   });
 }
 
@@ -60,6 +62,13 @@ class TableCardView extends StatelessWidget {
               child: Text(
                 tableCard.date,
                 style: textTheme.subtitle1,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                tableCard.timeSlot,
+                style: textTheme.subtitle2,
               ),
             ),
           ],

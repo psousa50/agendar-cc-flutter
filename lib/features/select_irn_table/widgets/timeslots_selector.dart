@@ -4,16 +4,16 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/data/extensions.dart';
-import '../../../core/data/models.dart';
 
 class TimeSlotsSelector extends StatelessWidget {
   static var twoDigitsFormat = NumberFormat("00");
+
+  final Set<String> timeSlots;
   final Function(TimeOfDay) onTimeSlotSelected;
 
-  final IrnTables tables;
   const TimeSlotsSelector({
     Key? key,
-    required this.tables,
+    required this.timeSlots,
     required this.onTimeSlotSelected,
   }) : super(key: key);
 
@@ -62,17 +62,13 @@ class TimeSlotsSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var uniqueTimeSlots = tables
-        .map((t) => t.timeSlots.map((ts) => ts.substring(0, 5)))
-        .expand((t) => t)
-        .toSet()
-        .toList()
-          ..sort();
-    Map<int, List<String>> timeSlots =
-        groupBy(uniqueTimeSlots, (t) => int.parse(t.substring(0, 2)));
-    var keys = timeSlots.keys.toList();
+    var sortedTimeSlots = timeSlots.toList()..sort();
+    Map<int, List<String>> groupedTimeSlots =
+        groupBy(sortedTimeSlots, (t) => int.parse(t.substring(0, 2)));
+    var keys = groupedTimeSlots.keys.toList();
     return ListView.separated(
-      itemBuilder: (c, i) => buildTimeRow(c, keys[i], timeSlots[keys[i]]!),
+      itemBuilder: (c, i) =>
+          buildTimeRow(c, keys[i], groupedTimeSlots[keys[i]]!),
       separatorBuilder: (_, __) => Divider(
         height: 1,
         thickness: 2,

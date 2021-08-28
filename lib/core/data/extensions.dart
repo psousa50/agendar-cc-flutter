@@ -24,7 +24,11 @@ TimeOfDay timeOfDayFromSlot(String slot) {
 var twoDigitsFormat = NumberFormat('00');
 
 extension TimeOfDayExtension on TimeOfDay {
-  String toSlot8() {
+  String toSlotHHMMSS() {
     return "${twoDigitsFormat.format(hour)}:${twoDigitsFormat.format(minute)}:00";
+  }
+
+  String toSlotHHMM() {
+    return "${twoDigitsFormat.format(hour)}:${twoDigitsFormat.format(minute)}";
   }
 }

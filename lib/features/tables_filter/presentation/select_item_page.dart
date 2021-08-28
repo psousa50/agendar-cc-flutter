@@ -81,7 +81,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
                 elements: widget.items
                     .where((i) => i.normalizedName.contains(normalizedText))
                     .toList(),
-                groupBy: (e) => e.name[0],
+                groupBy: (e) => e.name[0].normalize().toUpperCase(),
                 itemBuilder: buildItem,
                 groupSeparatorBuilder: buildSeparator,
                 itemComparator: (i1, i2) => i1.name.compareTo(i2.name),
