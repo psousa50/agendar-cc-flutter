@@ -20,7 +20,10 @@ class IrnTableSelectionData {
 
 class TableCardView extends StatelessWidget {
   final IrnTableSelectionData tableCard;
-  const TableCardView(this.tableCard);
+  final Widget? child;
+
+  const TableCardView({required this.tableCard, required this.child});
+
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
@@ -65,12 +68,13 @@ class TableCardView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                 tableCard.timeSlot,
                 style: textTheme.subtitle2,
               ),
             ),
+            if (child != null) child!,
           ],
         ),
       ),

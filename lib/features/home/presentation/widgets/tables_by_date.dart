@@ -118,7 +118,8 @@ class DayCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 200),
       margin: const EdgeInsets.all(2.0),
       alignment: Alignment.center,
       decoration: BoxDecoration(

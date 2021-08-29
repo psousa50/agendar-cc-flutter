@@ -97,17 +97,19 @@ class _SelectIrnTableState extends State<SelectIrnTable> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
-                  child: TableCardView(cardData),
+                  child: TableCardView(
+                      tableCard: cardData,
+                      child: (distinctTimeSlots.length > 1)
+                          ? TextButton(
+                              onPressed: selectTimeSlot,
+                              child: Text("Escolher outro horário"),
+                            )
+                          : null),
                 ),
                 ElevatedButton(
                   onPressed: scheduleTable,
                   child: Text("Agendar"),
                 ),
-                if (distinctTimeSlots.length > 1)
-                  ElevatedButton(
-                    onPressed: selectTimeSlot,
-                    child: Text("Escolher outro horário"),
-                  ),
               ],
             ),
           ),
