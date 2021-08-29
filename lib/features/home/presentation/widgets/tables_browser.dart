@@ -71,6 +71,7 @@ class _TablesBrowserState extends State<TablesBrowser> {
 
     setState(() {
       _selectedPlace = newSelectedPlace;
+      _focusedDay = null;
     });
 
     if (newSelectedPlace != null && _selectedDate != null) {

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+class AppColors {
+  static const foundTable = Color(0xff0080cc);
+  static const selectedTable = Color(0xffcc00cc);
+}
+
 const primaryColor = Color(0xfff0ad4e);
 const accentColor = Color(0xff26c6da);
 const mainTextColor = Color(0xff0095a8);

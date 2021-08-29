@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../core/data/models.dart';
+import '../../../../themes.dart';
 
 class TablesByDateView extends StatefulWidget {
   final IrnTables tables;
@@ -42,6 +43,11 @@ class _TablesByDateViewState extends State<TablesByDateView> {
         tables.map((t) => t.placeName).toSet().toList(),
       ),
     );
+
+    List<String> events(DateTime date) {
+      return groupedTablesByPlace[dateOnly(date)] ?? [];
+    }
+
     var minDate = (groupedTablesByPlace.keys.length > 0
         ? groupedTablesByPlace.keys.reduce(
             (value, element) => element.isBefore(value) ? element : value)
@@ -66,9 +72,7 @@ class _TablesByDateViewState extends State<TablesByDateView> {
       firstDay: firstDay,
       lastDay: lastDay,
       focusedDay: focusedDay,
-      eventLoader: (DateTime date) {
-        return groupedTablesByPlace[dateOnly(date)] ?? [];
-      },
+      eventLoader: (DateTime date) => events(date),
       calendarFormat: _calendarFormat,
       calendarStyle: CalendarStyle(
         outsideDaysVisible: false,
@@ -79,18 +83,51 @@ class _TablesByDateViewState extends State<TablesByDateView> {
       ),
       onFormatChanged: onFormatChanged,
       calendarBuilders: CalendarBuilders(
-        selectedBuilder: (context, date, events) => Container(
-          margin: const EdgeInsets.all(4.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Theme.of(context).selectedRowColor,
-            borderRadius: BorderRadius.circular(50.0),
-          ),
-          child: Text(
-            date.day.toString(),
-            style: Theme.of(context).accentTextTheme.bodyText1,
-          ),
+        defaultBuilder: (context, date, focusedDay) {
+          var hasEvents = events(date).length > 0;
+          return DayCircle(
+            day: date.day,
+            circleColor: hasEvents
+                ? AppColors.foundTable
+                : Theme.of(context).scaffoldBackgroundColor,
+            textStyle: hasEvents
+                ? Theme.of(context).accentTextTheme.bodyText1
+                : Theme.of(context).textTheme.bodyText1,
+          );
+        },
+        selectedBuilder: (context, date, focusedDay) => DayCircle(
+          day: date.day,
+          circleColor: AppColors.selectedTable,
+          textStyle: Theme.of(context).accentTextTheme.bodyText1,
         ),
+      ),
+    );
+  }
+}
+
+class DayCircle extends StatelessWidget {
+  final int day;
+  final Color circleColor;
+  final TextStyle? textStyle;
+
+  const DayCircle({
+    required this.day,
+    required this.circleColor,
+    required this.textStyle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(2.0),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: circleColor,
+        shape: BoxShape.circle,
+      ),
+      child: Text(
+        day.toString(),
+        style: textStyle,
       ),
     );
   }
