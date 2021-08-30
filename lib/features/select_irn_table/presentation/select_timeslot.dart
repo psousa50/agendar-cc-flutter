@@ -15,6 +15,7 @@ class SelectTimeSlotPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageWithAppBar(
+      closeButton: true,
       title: "Escolha de Horário",
       child: Padding(
         padding: const EdgeInsets.symmetric(

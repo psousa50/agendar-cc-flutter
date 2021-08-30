@@ -1,4 +1,5 @@
 import 'package:agendar_cc_flutter/features/select_irn_table/presentation/select_timeslot.dart';
+import 'package:agendar_cc_flutter/widgets/page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -75,8 +76,8 @@ class _SelectIrnTableState extends State<SelectIrnTable> {
 
   void selectTimeSlot() {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => SelectTimeSlotPage(
+      SlideBottomTopTransition(
+        child: SelectTimeSlotPage(
           timeSlots: distinctTimeSlots,
           onTimeSlotSelected: onTimeSlotSelected,
         ),
@@ -100,7 +101,7 @@ class _SelectIrnTableState extends State<SelectIrnTable> {
                   child: TableCardView(
                       tableCard: cardData,
                       child: (distinctTimeSlots.length > 1)
-                          ? TextButton(
+                          ? OutlinedButton(
                               onPressed: selectTimeSlot,
                               child: Text("Escolher outro horário"),
                             )

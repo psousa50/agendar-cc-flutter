@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../../themes.dart';
+
 class IrnTableSelectionData {
   final String service;
   final String county;
@@ -30,45 +32,47 @@ class TableCardView extends StatelessWidget {
     return Card(
       elevation: 5,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
                 tableCard.service,
                 style: textTheme.subtitle1,
               ),
             ),
             Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 8),
                 child: Text(
                   tableCard.county,
-                  style: textTheme.subtitle1,
+                  style: textTheme.subtitle1!
+                      .copyWith(color: AppColors.selectedTable),
                 )),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 24),
               child: Text(
                 tableCard.place,
                 style: textTheme.bodyText1,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               child: Text(
                 tableCard.address,
                 style: textTheme.caption,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 16),
               child: Text(
                 tableCard.date,
-                style: textTheme.subtitle1,
+                style: textTheme.subtitle1!
+                    .copyWith(color: AppColors.selectedTable),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
                 tableCard.timeSlot,
                 style: textTheme.subtitle2,
