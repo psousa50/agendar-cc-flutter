@@ -81,31 +81,57 @@ class _TablesBrowserState extends State<TablesBrowser> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ConstrainedBox(
-          constraints: BoxConstraints.tightFor(
-              height: MediaQuery.of(context).size.height * .3),
-          child: TablesByDateView(
-            tables: widget.tables.where(
-              (t) => _selectedPlace == null || t.placeName == _selectedPlace,
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.normalize().maxWidth < 480) {
+        return Column(
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints.tightFor(
+                  height: MediaQuery.of(context).size.height * .3),
+              child: TablesByDateView(
+                tables: widget.tables.where(
+                  (t) =>
+                      _selectedPlace == null || t.placeName == _selectedPlace,
+                ),
+                selectedDate: _selectedDate,
+                focusedDay: _focusedDay,
+                onDateSelected: onDateSelected,
+              ),
             ),
-            selectedDate: _selectedDate,
-            focusedDay: _focusedDay,
-            onDateSelected: onDateSelected,
+            Expanded(
+                child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TablesByLocation(
+                tables: widget.tables.where(
+                    (t) => _selectedDate == null || t.date == _selectedDate),
+                selectedPlace: _selectedPlace,
+                onPlaceSelected: onPlaceSelected,
+              ),
+            )),
+          ],
+        );
+      } else {
+        return Row(children: [
+          Expanded(
+            child: TablesByDateView(
+              tables: widget.tables.where(
+                (t) => _selectedPlace == null || t.placeName == _selectedPlace,
+              ),
+              selectedDate: _selectedDate,
+              focusedDay: _focusedDay,
+              onDateSelected: onDateSelected,
+            ),
           ),
-        ),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TablesByLocation(
-            tables: widget.tables
-                .where((t) => _selectedDate == null || t.date == _selectedDate),
-            selectedPlace: _selectedPlace,
-            onPlaceSelected: onPlaceSelected,
+          Expanded(
+            child: TablesByLocation(
+              tables: widget.tables.where(
+                  (t) => _selectedDate == null || t.date == _selectedDate),
+              selectedPlace: _selectedPlace,
+              onPlaceSelected: onPlaceSelected,
+            ),
           ),
-        )),
-      ],
-    );
+        ]);
+      }
+    });
   }
 }

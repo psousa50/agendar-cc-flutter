@@ -52,23 +52,15 @@ class HomePageView extends StatelessWidget {
     return Column(
       children: [
         FilterInfo(tablesFilter),
-        TablesFetcher(
-          tablesFilter,
-          (tables) => Expanded(
-            child: TablesBrowser(tables),
-          ),
-        ),
+        Expanded(child: TablesFetcher(tablesFilter)),
       ],
     );
   }
 }
 
-typedef TablesFetcherBuilder = Widget Function(IrnTables);
-
 class TablesFetcher extends StatelessWidget {
   final TablesFilter tablesFilter;
-  final TablesFetcherBuilder builder;
-  const TablesFetcher(this.tablesFilter, this.builder);
+  const TablesFetcher(this.tablesFilter);
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +69,7 @@ class TablesFetcher extends StatelessWidget {
             ServiceLocator.irnTablesFetcher.fetchIrnTables(tablesFilter.filter),
         builder: (BuildContext context, AsyncSnapshot<IrnTables> snapshot) {
           var tables = snapshot.data ?? [];
-          return builder(tables);
+          return TablesBrowser(tables);
         });
   }
 }

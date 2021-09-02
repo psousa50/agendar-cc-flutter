@@ -102,7 +102,6 @@ class _MapViewerState extends State<MapViewer> {
     var vr = await c.getVisibleRegion();
     var bounds = calcBounds(widget.markers) ?? defaultBounds;
 
-    bounds = bounds.inflateByPercentage(0.1);
     bounds = bounds.ensureMinimumSize(0.005);
 
     var wantedWidth = bounds.width;

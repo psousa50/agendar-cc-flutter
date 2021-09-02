@@ -118,9 +118,11 @@ class DayCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var margin = MediaQuery.of(context).size.width / 100.0;
+    print(margin);
     return AnimatedContainer(
       duration: Duration(milliseconds: 200),
-      margin: const EdgeInsets.all(2.0),
+      margin: EdgeInsets.all(margin),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: circleColor,
