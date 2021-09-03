@@ -1,4 +1,3 @@
-import 'package:agendar_cc_flutter/widgets/page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,10 +5,11 @@ import '../../../../core/data/irn_filter.dart';
 import '../../../../core/data/models.dart';
 import '../../../../core/service_locator.dart';
 import '../../../../core/tables_filter.dart';
+import '../../../../widgets/page_transitions.dart';
 import '../../../../widgets/page_with_app_bar.dart';
 import '../../../tables_filter/presentation/tables_filter_page.dart';
+import '../widgets/app_startup_builder.dart';
 import '../widgets/filter_info.dart';
-import '../widgets/read_reference_data.dart';
 import '../widgets/tables_browser.dart';
 
 class HomePage extends StatelessWidget {
@@ -32,9 +32,11 @@ class HomePage extends StatelessWidget {
       title: "Mesas",
       actions: [
         IconButton(
-            onPressed: () => filter(context), icon: Icon(Icons.filter_list))
+          onPressed: () => filter(context),
+          icon: Icon(Icons.filter_list),
+        )
       ],
-      child: ReadReferenceDataFuture(
+      child: AppStartupBuilder(
         child: Consumer<TablesFilter>(
           builder: (_, tablesFilter, __) => HomePageView(tablesFilter),
         ),

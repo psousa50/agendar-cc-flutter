@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'core/service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'core/app_config.dart';
 import 'app.dart';
+import 'core/app_config.dart';
+import 'core/service_locator.dart';
 
 AppConfig getConfig() {
   var configProd = AppConfig(schema: 'https', host: 'agendar-cc.herokuapp.com');
@@ -20,10 +20,11 @@ AppConfig getConfig() {
 }
 
 void initializeApp(AppConfig config) {
+  WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator.setup(config);
 }
 
-void main() {
+void main() async {
   var config = getConfig();
   initializeApp(config);
   runApp(App(config));

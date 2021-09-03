@@ -23,6 +23,7 @@ dependencies:
   grouped_list: ^4.1.0
   table_calendar: ^3.0.2
   intl: ^0.17.0
+  geolocator: ^7.6.0
 
 dev_dependencies:
   flutter_test:

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/service_locator.dart';
 
-class ReadReferenceDataFuture extends StatelessWidget {
+class AppStartupBuilder extends StatelessWidget {
   final Widget child;
-  const ReadReferenceDataFuture({required this.child});
+  const AppStartupBuilder({required this.child});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: ServiceLocator.referenceData.fetchAll(),
+        future: ServiceLocator.appStartUp.initialize(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -19,7 +19,11 @@ class ReadReferenceDataFuture extends StatelessWidget {
               );
             default:
               if (snapshot.hasError) {
-                return Container(child: Text(snapshot.error.toString()));
+                return Container(
+                  child: Text(
+                    snapshot.error.toString(),
+                  ),
+                );
               } else {
                 return child;
               }

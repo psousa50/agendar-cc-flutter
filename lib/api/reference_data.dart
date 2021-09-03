@@ -105,4 +105,19 @@ class ReferenceData {
   Future<void> fetchAll() async {
     if (!_staticDataFetched) await _fetchStaticData();
   }
+
+  double _manhattanDistance(District d, GpsLocation l) {
+    return (d.gpsLocation!.latitude - l.latitude).abs() +
+        (d.gpsLocation!.longitude - l.longitude).abs();
+  }
+
+  int getCloserDistrictTo(GpsLocation gpsLocation) {
+    return districts()
+        .where((d) => d.gpsLocation != null)
+        .reduce((value, element) => _manhattanDistance(element, gpsLocation) <
+                _manhattanDistance(value, gpsLocation)
+            ? element
+            : value)
+        .districtId;
+  }
 }

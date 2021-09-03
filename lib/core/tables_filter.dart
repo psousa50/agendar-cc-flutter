@@ -81,4 +81,8 @@ class TablesFilter with ChangeNotifier {
 
     notifyListeners();
   }
+
+  updateDistrictId(int districtId) {
+    filter = normalizeFilter(filter, districtId: districtId);
+  }
 }
