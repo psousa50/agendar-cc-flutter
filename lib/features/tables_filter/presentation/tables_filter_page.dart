@@ -145,7 +145,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
 
   void useCurrentLocation() async {
     var districtId =
-        await ServiceLocator.appStartUp.getCLoserDistrictToCurrentLocation();
+        await ServiceLocator.appStartUp.getCloserDistrictToCurrentLocation();
     if (districtId != null) {
       setState(() {
         filter = normalizeFilter(

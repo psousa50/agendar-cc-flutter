@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../core/app_config.dart';
+import '../core/services/app_config.dart';
 import '../core/data/irn_filter.dart';
 import '../core/data/models.dart';
 

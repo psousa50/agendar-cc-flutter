@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'app.dart';
-import 'core/app_config.dart';
+import 'core/services/app_config.dart';
 import 'core/service_locator.dart';
 
 AppConfig getConfig() {

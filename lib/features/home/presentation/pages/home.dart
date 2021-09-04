@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/data/irn_filter.dart';
 import '../../../../core/data/models.dart';
 import '../../../../core/service_locator.dart';
-import '../../../../core/tables_filter.dart';
+import '../../../../core/services/tables_filter.dart';
 import '../../../../widgets/page_transitions.dart';
 import '../../../../widgets/page_with_app_bar.dart';
 import '../../../tables_filter/presentation/tables_filter_page.dart';

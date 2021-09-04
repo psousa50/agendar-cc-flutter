@@ -1,8 +1,8 @@
-import 'themes.dart';
+import 'ui/themes.dart';
 import 'package:flutter/material.dart';
 
-import 'core/app_config.dart';
-import 'core/app_providers.dart';
+import 'core/services/app_config.dart';
+import 'core/services/app_providers.dart';
 import 'features/home/presentation/pages/home.dart';
 
 class App extends StatelessWidget {

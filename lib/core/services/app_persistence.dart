@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'data/irn_filter.dart';
-import 'data/models.dart';
+import '../data/irn_filter.dart';
+import '../data/models.dart';
 
 const storageKey = "agendar-cc";
 

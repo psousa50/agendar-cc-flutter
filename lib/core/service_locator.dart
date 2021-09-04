@@ -2,11 +2,11 @@ import 'package:get_it/get_it.dart';
 
 import '../api/irn_tables_fetcher.dart';
 import '../api/reference_data.dart';
-import 'app_config.dart';
-import 'app_persistence.dart';
-import 'app_startup.dart';
-import 'geo_locator_service.dart';
-import 'tables_filter.dart';
+import 'services/app_config.dart';
+import 'services/app_persistence.dart';
+import 'services/app_services.dart';
+import 'services/geo_locator_service.dart';
+import 'services/tables_filter.dart';
 
 class ServiceLocator {
   static final _getIt = GetIt.I;
@@ -16,7 +16,7 @@ class ServiceLocator {
   static TablesFilter get tablesFilter => _getIt<TablesFilter>();
   static GeoLocatorService get geoLocator => _getIt<GeoLocatorService>();
   static AppPersistence get persistence => _getIt<AppPersistence>();
-  static AppStartup get appStartUp => _getIt<AppStartup>();
+  static AppServices get appStartUp => _getIt<AppServices>();
 
   static void setup(AppConfig config) {
     _getIt.registerSingleton<ReferenceData>(ReferenceData(config));
@@ -24,6 +24,6 @@ class ServiceLocator {
     _getIt.registerSingleton<TablesFilter>(TablesFilter());
     _getIt.registerSingleton<GeoLocatorService>(GeoLocatorService());
     _getIt.registerSingleton<AppPersistence>(AppPersistence());
-    _getIt.registerSingleton<AppStartup>(AppStartup());
+    _getIt.registerSingleton<AppServices>(AppServices());
   }
 }

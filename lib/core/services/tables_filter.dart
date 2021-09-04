@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'data/irn_filter.dart';
-import 'service_locator.dart';
+import '../data/irn_filter.dart';
+import '../service_locator.dart';
 
 class TablesFilter with ChangeNotifier {
   IrnFilter filter = IrnFilter(

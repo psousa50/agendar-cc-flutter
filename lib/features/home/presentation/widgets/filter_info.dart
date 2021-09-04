@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/tables_filter.dart';
+import '../../../../core/services/tables_filter.dart';
 
 class FilterInfo extends StatelessWidget {
   final TablesFilter tablesFilter;

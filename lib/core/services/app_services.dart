@@ -1,4 +1,4 @@
-import 'service_locator.dart';
+import '../service_locator.dart';
 
 class AppServices {
   Future<void> initialize() async {

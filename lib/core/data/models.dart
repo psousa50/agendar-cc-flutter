@@ -188,7 +188,7 @@ class UserDataState {
 
 typedef IrnTables = Iterable<IrnTable>;
 
-extension IrnTablesExtensoins on IrnTables {
+extension IrnTablesExtensions on IrnTables {
   bool c<T>(T v1, T? v2) => v2 == null || v1 == v2;
 
   IrnTables clone() {
