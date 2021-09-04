@@ -1,14 +1,14 @@
-import 'package:agendar_cc_flutter/features/select_irn_table/presentation/select_timeslot.dart';
-import 'package:agendar_cc_flutter/widgets/page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../core/data/extensions.dart';
 import '../../../core/data/models.dart';
 import '../../../core/service_locator.dart';
+import '../../../widgets/page_transitions.dart';
 import '../../../widgets/page_with_app_bar.dart';
 import '../../schedule_at_irn/presentation/schedule_at_irn.dart';
 import '../widgets/table_card_view.dart';
+import 'select_timeslot.dart';
 
 class SelectIrnTable extends StatefulWidget {
   final IrnTables tables;

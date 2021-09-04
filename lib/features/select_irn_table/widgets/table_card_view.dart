@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../../themes.dart';
+import '../../../ui/themes.dart';
 
 class IrnTableSelectionData {
   final String service;

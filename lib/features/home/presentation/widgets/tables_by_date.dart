@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../core/data/models.dart';
-import '../../../../themes.dart';
+import '../../../../ui/themes.dart';
 
 class TablesByDateView extends StatefulWidget {
   final IrnTables tables;
