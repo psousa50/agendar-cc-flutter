@@ -40,7 +40,7 @@ class IrnTablesFetcher {
         path: "/api/v1/irnTables",
         queryParameters: queryParameters);
     var response = await http.get(url);
-    var tablesJson = (json.decode(response.body) as Iterable);
+    var tablesJson = json.decode(response.body);
 
     var tables = tablesJson.map((t) => IrnTable.fromMap(t));
 
