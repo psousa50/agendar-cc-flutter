@@ -1,6 +1,6 @@
 import 'service_locator.dart';
 
-class AppStartup {
+class AppServices {
   Future<void> initialize() async {
     await ServiceLocator.referenceData.fetchAll();
     await ServiceLocator.persistence.initialize();
@@ -13,7 +13,7 @@ class AppStartup {
     ServiceLocator.tablesFilter.update(ServiceLocator.persistence.filter);
   }
 
-  Future<int?> getCLoserDistrictToCurrentLocation() async {
+  Future<int?> getCloserDistrictToCurrentLocation() async {
     var location = await ServiceLocator.geoLocator.getLocation();
     return location != null
         ? ServiceLocator.referenceData.getCloserDistrictTo(location).districtId
@@ -21,7 +21,7 @@ class AppStartup {
   }
 
   Future<void> useCurrentLocation() async {
-    var districtId = await getCLoserDistrictToCurrentLocation();
+    var districtId = await getCloserDistrictToCurrentLocation();
     if (districtId != null) {
       ServiceLocator.tablesFilter.updateDistrictId(districtId);
     }
