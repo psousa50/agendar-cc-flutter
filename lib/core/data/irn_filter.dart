@@ -127,6 +127,11 @@ IrnFilter normalizeFilter(
     }
   }
 
+  if (region == null && filter.region != null) {
+    districtId = null;
+    countyId = null;
+  }
+
   if (districtId != null && districtId != filter.districtId) {
     region = ref.district(districtId).region;
     if (countyId != null) {
@@ -139,19 +144,23 @@ IrnFilter normalizeFilter(
     }
   }
 
+  if (districtId == null && filter.districtId != null) {
+    countyId = null;
+  }
+
   if (countyId != null && countyId != filter.countyId) {
     districtId = ref.county(countyId).districtId;
     region = ref.district(districtId).region;
   }
 
-  if (districtId == null) {
+  if (districtId == null && region != null) {
     var districts = ref.filterDistricts(region: region);
     if (districts.length == 1) {
       districtId = districts.first.districtId;
     }
   }
 
-  if (countyId == null) {
+  if (countyId == null && districtId != null) {
     var counties = ref.filterCounties(region: region, districtId: districtId);
     if (counties.length == 1) {
       countyId = counties.first.countyId;
