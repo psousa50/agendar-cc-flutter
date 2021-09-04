@@ -38,7 +38,7 @@ class TablesFilter with ChangeNotifier {
     return ref.irnService(filter.serviceId!).name;
   }
 
-  void updateAll(
+  void update(
     IrnFilter other,
   ) {
     filter = IrnFilter(
@@ -58,7 +58,7 @@ class TablesFilter with ChangeNotifier {
     notifyListeners();
   }
 
-  void update(
+  void updateWith(
     int? serviceId,
     String? region,
     int? districtId,
@@ -69,26 +69,27 @@ class TablesFilter with ChangeNotifier {
     DateTime? startDate,
     DateTime? endDate,
   ) {
-    filter = filter.copyWith(
-      serviceId: serviceId,
-      region: region,
-      districtId: districtId,
-      countyId: countyId,
-      placeName: placeName,
-      startTime: startTime,
-      endTime: endTime,
-      startDate: startDate,
-      endDate: endDate,
+    update(
+      filter.copyWith(
+        serviceId: serviceId,
+        region: region,
+        districtId: districtId,
+        countyId: countyId,
+        placeName: placeName,
+        startTime: startTime,
+        endTime: endTime,
+        startDate: startDate,
+        endDate: endDate,
+      ),
     );
-
-    ServiceLocator.persistence.update(filter: filter);
-
-    notifyListeners();
   }
 
-  updateDistrictId(int districtId) {
-    filter = normalizeFilter(filter, districtId: districtId);
-
-    ServiceLocator.persistence.update(filter: filter);
+  void updateDistrictId(int districtId) {
+    update(
+      normalizeFilter(
+        filter,
+        districtId: districtId,
+      ),
+    );
   }
 }

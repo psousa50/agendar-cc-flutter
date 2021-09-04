@@ -14,7 +14,7 @@ import '../widgets/tables_browser.dart';
 
 class HomePage extends StatelessWidget {
   void onFilterChanged(IrnFilter filter) {
-    ServiceLocator.tablesFilter.updateAll(filter);
+    ServiceLocator.tablesFilter.update(filter);
   }
 
   void filter(BuildContext context) {
@@ -38,7 +38,9 @@ class HomePage extends StatelessWidget {
       ],
       child: AppStartupBuilder(
         child: Consumer<TablesFilter>(
-          builder: (_, tablesFilter, __) => HomePageView(tablesFilter),
+          builder: (_, tablesFilter, __) {
+            return HomePageView(tablesFilter);
+          },
         ),
       ),
     );

@@ -111,13 +111,11 @@ class ReferenceData {
         (d.gpsLocation!.longitude - l.longitude).abs();
   }
 
-  int getCloserDistrictTo(GpsLocation gpsLocation) {
-    return districts()
-        .where((d) => d.gpsLocation != null)
-        .reduce((value, element) => _manhattanDistance(element, gpsLocation) <
+  District getCloserDistrictTo(GpsLocation gpsLocation) {
+    return districts().where((d) => d.gpsLocation != null).reduce(
+        (value, element) => _manhattanDistance(element, gpsLocation) <
                 _manhattanDistance(value, gpsLocation)
             ? element
-            : value)
-        .districtId;
+            : value);
   }
 }

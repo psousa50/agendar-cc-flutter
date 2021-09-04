@@ -133,7 +133,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
 
   void onApplyFilter() {
     Navigator.of(context).pop();
-    ServiceLocator.tablesFilter.updateAll(filter);
+    ServiceLocator.tablesFilter.update(filter);
   }
 
   void clearAll() {
@@ -141,6 +141,21 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
       filter = normalizeFilter(filter,
           region: null, districtId: null, countyId: null);
     });
+  }
+
+  void useCurrentLocation() async {
+    var districtId =
+        await ServiceLocator.appStartUp.getCLoserDistrictToCurrentLocation();
+    if (districtId != null) {
+      setState(() {
+        filter = normalizeFilter(
+          filter,
+          region: filter.region,
+          districtId: districtId,
+          countyId: filter.countyId,
+        );
+      });
+    }
   }
 
   @override
@@ -152,7 +167,20 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     return PageWithAppBar(
       title: "Filtros",
       closeButton: true,
-      actions: [IconButton(onPressed: onApplyFilter, icon: Icon(Icons.done))],
+      actions: [
+        IconButton(
+          onPressed: useCurrentLocation,
+          icon: Icon(Icons.location_searching),
+        ),
+        IconButton(
+          onPressed: clearAll,
+          icon: Icon(Icons.clear_all),
+        ),
+        IconButton(
+          onPressed: onApplyFilter,
+          icon: Icon(Icons.done),
+        ),
+      ],
       child: Container(
         padding: EdgeInsets.all(8),
         color: Theme.of(context).dividerColor,
@@ -178,11 +206,6 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
                 "Concelho",
                 countyId == null ? "Todos" : refData.county(countyId).name,
                 pickCounty),
-            TextButton.icon(
-              onPressed: clearAll,
-              icon: Icon(Icons.clear_all),
-              label: Text("Limpar Filtros"),
-            )
           ],
         ),
       ),

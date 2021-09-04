@@ -214,7 +214,6 @@ class JavaScriptCode {
     //   }
     // ''';
 
-    // print(x);
     // return x;
   }
 }
