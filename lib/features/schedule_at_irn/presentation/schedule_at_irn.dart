@@ -14,12 +14,7 @@ class ScheduleAtIrnPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var place = ServiceLocator.referenceData.irnPlace(tableSelection.placeName);
 
-    var user = UserDataState(
-      citizenCardNumber: "7343623",
-      email: "pedronsousa@gmail.com",
-      name: "Pedro Sousa",
-      phone: "961377576",
-    );
+    var user = ServiceLocator.persistence.userData;
 
     return PageWithAppBar(
         child: InAppWebView(

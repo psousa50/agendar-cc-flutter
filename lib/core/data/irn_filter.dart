@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../service_locator.dart';
+import '../data/extensions.dart';
 
 class IrnFilter {
   final int? serviceId;
@@ -52,6 +55,49 @@ class IrnFilter {
       date: date ?? this.date,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'serviceId': serviceId,
+      'region': region,
+      'districtId': districtId,
+      'countyId': countyId,
+      'placeName': placeName,
+      'startTime': startTime?.toSlotHHMMSS(),
+      'endTime': endTime?.toSlotHHMMSS(),
+      'startDate': startDate?.toIso8601String(),
+      'endDate': endDate?.millisecondsSinceEpoch,
+      'date': date?.millisecondsSinceEpoch,
+    };
+  }
+
+  static DateTime? safeFromMilliseconds(int? mili) {
+    return mili != null ? DateTime.fromMillisecondsSinceEpoch(mili) : null;
+  }
+
+  static TimeOfDay? safeTimeOfDayFromSlot(String? slot) {
+    return slot != null ? timeOfDayFromSlot(slot) : null;
+  }
+
+  factory IrnFilter.fromMap(Map<String, dynamic> map) {
+    return IrnFilter(
+      serviceId: map['serviceId'],
+      region: map['region'],
+      districtId: map['districtId'],
+      countyId: map['countyId'],
+      placeName: map['placeName'],
+      startTime: safeTimeOfDayFromSlot(map['startTime']),
+      endTime: safeTimeOfDayFromSlot(map['endTime']),
+      startDate: safeFromMilliseconds(map['startDate']),
+      endDate: safeFromMilliseconds(map['endDate']),
+      date: safeFromMilliseconds(map['date']),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory IrnFilter.fromJson(String source) =>
+      IrnFilter.fromMap(json.decode(source));
 }
 
 IrnFilter normalizeFilter(

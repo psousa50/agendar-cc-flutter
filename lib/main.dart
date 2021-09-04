@@ -24,7 +24,7 @@ void initializeApp(AppConfig config) {
   ServiceLocator.setup(config);
 }
 
-void main() async {
+void main() {
   var config = getConfig();
   initializeApp(config);
   runApp(App(config));

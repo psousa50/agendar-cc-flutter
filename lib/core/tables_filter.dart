@@ -53,6 +53,8 @@ class TablesFilter with ChangeNotifier {
       endDate: other.endDate,
     );
 
+    ServiceLocator.persistence.update(filter: filter);
+
     notifyListeners();
   }
 
@@ -79,10 +81,14 @@ class TablesFilter with ChangeNotifier {
       endDate: endDate,
     );
 
+    ServiceLocator.persistence.update(filter: filter);
+
     notifyListeners();
   }
 
   updateDistrictId(int districtId) {
     filter = normalizeFilter(filter, districtId: districtId);
+
+    ServiceLocator.persistence.update(filter: filter);
   }
 }

@@ -12,6 +12,13 @@ class AppStartup {
 
   Future<void> initialize() async {
     await ServiceLocator.referenceData.fetchAll();
-    await setInitialLocation();
+    await ServiceLocator.persistence.initialize();
+
+    if (ServiceLocator.persistence.runningFirstTime) {
+      await setInitialLocation();
+      ServiceLocator.persistence.update(runningFirstTime: false);
+    }
+
+    ServiceLocator.tablesFilter.updateAll(ServiceLocator.persistence.filter);
   }
 }

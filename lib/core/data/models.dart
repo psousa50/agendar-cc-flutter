@@ -159,6 +159,31 @@ class UserDataState {
     required this.phone,
     this.disclaimerShown = false,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'citizenCardNumber': citizenCardNumber,
+      'email': email,
+      'phone': phone,
+      'disclaimerShown': disclaimerShown,
+    };
+  }
+
+  factory UserDataState.fromMap(Map<String, dynamic> map) {
+    return UserDataState(
+      name: map['name'],
+      citizenCardNumber: map['citizenCardNumber'],
+      email: map['email'],
+      phone: map['phone'],
+      disclaimerShown: map['disclaimerShown'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory UserDataState.fromJson(String source) =>
+      UserDataState.fromMap(json.decode(source));
 }
 
 typedef IrnTables = Iterable<IrnTable>;
