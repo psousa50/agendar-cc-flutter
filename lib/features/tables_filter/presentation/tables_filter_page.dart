@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../../core/data/extensions.dart';
 import '../../../core/data/irn_filter.dart';
 import '../../../core/service_locator.dart';
 import '../../../widgets/page_with_app_bar.dart';
@@ -107,6 +108,75 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     ));
   }
 
+  void pickStartDate() async {
+    var now = DateTime.now();
+    var startDate = DateTime(now.year, now.month, 1);
+    var endDate = DateTime(now.year, now.month + 4, 1);
+    var initialDate = filter.startDate ?? now;
+    DateTime? date = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: startDate,
+      lastDate: endDate,
+    );
+    if (date != null) {
+      setState(() {
+        filter = filter.copyWith(
+          startDate: date,
+        );
+      });
+    }
+  }
+
+  void pickEndDate() async {
+    var now = DateTime.now();
+    var d = filter.startDate ?? now;
+    var startDate = DateTime(d.year, d.month, 1);
+    var endDate = DateTime(now.year, now.month + 4, 1);
+    var initialDate = filter.startDate ?? now;
+    DateTime? date = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: startDate,
+        lastDate: endDate,
+        selectableDayPredicate: (date) => !date.isBefore(initialDate));
+    if (date != null) {
+      setState(() {
+        filter = filter.copyWith(
+          endDate: date,
+        );
+      });
+    }
+  }
+
+  void pickStartTime() async {
+    TimeOfDay? timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: filter.startTime ?? TimeOfDay(hour: 8, minute: 0),
+    );
+    if (timeOfDay != null) {
+      setState(() {
+        filter = filter.copyWith(
+          startTime: timeOfDay,
+        );
+      });
+    }
+  }
+
+  void pickEndTime() async {
+    TimeOfDay? timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: filter.endTime ?? TimeOfDay(hour: 8, minute: 0),
+    );
+    if (timeOfDay != null) {
+      setState(() {
+        filter = filter.copyWith(
+          endTime: timeOfDay,
+        );
+      });
+    }
+  }
+
   void onApplyFilter() {
     Navigator.of(context).pop();
     ServiceLocator.tablesFilter.update(filter);
@@ -114,8 +184,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
 
   void clearAll() {
     setState(() {
-      filter = normalizeFilter(filter,
-          region: null, districtId: null, countyId: null);
+      filter = filter.clear();
     });
   }
 
@@ -134,7 +203,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     }
   }
 
-  void updateService(int serviceId) {
+  void updateService(int serviceId) async {
     setState(() {
       filter = filter.copyWith(
         serviceId: serviceId,
@@ -160,11 +229,15 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     );
   }
 
-  Widget buildService(BuildContext context) {
+  Widget buildService() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Tipo de Serviço", style: Theme.of(context).textTheme.subtitle1),
+        Row(
+          children: [
+            Text("Tipo de Serviço",
+                style: Theme.of(context).textTheme.subtitle1),
+          ],
+        ),
         Row(
           children: [
             buildServiceButton(1, "Renovar CC"),
@@ -181,7 +254,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     );
   }
 
-  Widget buildLocation(BuildContext context) {
+  Widget buildLocation() {
     var region = filter.region;
     var districtId = filter.districtId;
     var countyId = filter.countyId;
@@ -230,6 +303,74 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     );
   }
 
+  Widget buildDateRange() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              "Período",
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          ],
+        ),
+        Card(
+          child: Card(
+            child: Column(
+              children: [
+                SectionItem(
+                    "",
+                    filter.startDate?.toIso8601String().substring(0, 10),
+                    "",
+                    pickStartDate),
+                SectionItem(
+                    "",
+                    filter.endDate?.toIso8601String().substring(0, 10),
+                    "",
+                    pickEndDate),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildTimeRange() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              "Horário",
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          ],
+        ),
+        Card(
+          child: Card(
+            child: Column(
+              children: [
+                SectionItem(
+                  "",
+                  filter.startTime?.toSlotHHMM(),
+                  "",
+                  pickStartTime,
+                ),
+                SectionItem(
+                  "",
+                  filter.endTime?.toSlotHHMM(),
+                  "",
+                  pickEndTime,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PageWithAppBar(
@@ -250,8 +391,11 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
-            buildService(context),
-            buildLocation(context),
+            buildService(),
+            buildLocation(),
+            SizedBox(height: 20),
+            buildDateRange(),
+            buildTimeRange(),
           ],
         ),
       ),

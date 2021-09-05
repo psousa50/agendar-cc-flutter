@@ -17,7 +17,7 @@ class IrnFilter {
   final DateTime? endDate;
   final DateTime? date;
 
-  IrnFilter({
+  const IrnFilter({
     this.serviceId,
     this.region,
     this.districtId,
@@ -98,6 +98,20 @@ class IrnFilter {
 
   factory IrnFilter.fromJson(String source) =>
       IrnFilter.fromMap(json.decode(source));
+
+  IrnFilter clear() {
+    return IrnFilter(
+      region: null,
+      districtId: null,
+      countyId: null,
+      placeName: null,
+      startTime: null,
+      endTime: null,
+      startDate: null,
+      endDate: null,
+      date: null,
+    );
+  }
 }
 
 IrnFilter normalizeFilter(

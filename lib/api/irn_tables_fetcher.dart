@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../core/services/app_config.dart';
+import '../core/data/extensions.dart';
 import '../core/data/irn_filter.dart';
 import '../core/data/models.dart';
 
@@ -17,7 +18,7 @@ class IrnTablesFetcher {
   }
 
   String? formatTimeOfDay(TimeOfDay? t) {
-    return t != null ? '${t.hour}:${t.minute}:00' : null;
+    return t != null ? t.toSlotHHMMSS() : null;
   }
 
   Future<Iterable<IrnTable>> fetchIrnTables(IrnFilter filter) async {
