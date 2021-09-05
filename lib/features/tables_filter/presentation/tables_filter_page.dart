@@ -25,15 +25,6 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     super.initState();
   }
 
-  void onServiceSelected(ItemForSelection? item) {
-    Navigator.of(context).pop();
-    setState(() {
-      filter = filter.copyWith(
-        serviceId: item == null ? null : int.parse(item.id),
-      );
-    });
-  }
-
   void onRegionSelected(ItemForSelection? item) {
     Navigator.of(context).pop();
     setState(() {
@@ -68,21 +59,6 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
         countyId: item == null ? null : int.parse(item.id),
       );
     });
-  }
-
-  void pickService() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => SelectItemPage(
-          items: ServiceLocator.referenceData
-              .irnServices()
-              .map((s) => ItemForSelection(
-                    s.serviceId.toString(),
-                    s.name,
-                  ))
-              .toList(),
-          selectedItem: filter.serviceId.toString(),
-          onItemSelected: onServiceSelected),
-    ));
   }
 
   void pickRegion() {
@@ -158,20 +134,108 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    var serviceId = filter.serviceId;
+  void updateService(int serviceId) {
+    setState(() {
+      filter = filter.copyWith(
+        serviceId: serviceId,
+      );
+    });
+  }
+
+  Widget buildServiceButton(int serviceId, String title) {
+    var currentServiceId = filter.serviceId;
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+        child: OutlinedButton(
+          onPressed: () => updateService(serviceId),
+          child: Text(title),
+          style: OutlinedButton.styleFrom(
+              backgroundColor: Theme.of(context).canvasColor,
+              primary: currentServiceId == serviceId
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).disabledColor),
+        ),
+      ),
+    );
+  }
+
+  Widget buildService(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Tipo de Serviço", style: Theme.of(context).textTheme.subtitle1),
+        Row(
+          children: [
+            buildServiceButton(1, "Renovar CC"),
+            buildServiceButton(2, "Levantar CC")
+          ],
+        ),
+        Row(
+          children: [
+            buildServiceButton(3, "Renovar Passaporte"),
+            buildServiceButton(4, "Levantar Passaporte")
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget buildLocation(BuildContext context) {
     var region = filter.region;
     var districtId = filter.districtId;
     var countyId = filter.countyId;
+    return Column(
+      children: [
+        Row(children: [
+          Expanded(
+            child: Text(
+              "Localização",
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              padding: EdgeInsets.all(0),
+              onPressed: useCurrentLocation,
+              icon: Icon(Icons.location_searching),
+              color: Theme.of(context).accentColor,
+            ),
+          )
+        ]),
+        Card(
+          child: Column(
+            children: [
+              SectionItem(
+                "Região",
+                region,
+                "Todas as Regiões",
+                pickRegion,
+              ),
+              SectionItem(
+                  "Distrito",
+                  districtId == null ? null : refData.district(districtId).name,
+                  "Todos os Distritos",
+                  pickDistrict),
+              SectionItem(
+                  "Concelho",
+                  countyId == null ? null : refData.county(countyId).name,
+                  "Todos os Concelhos",
+                  pickCounty),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return PageWithAppBar(
       title: "Filtros",
       closeButton: true,
       actions: [
-        IconButton(
-          onPressed: useCurrentLocation,
-          icon: Icon(Icons.location_searching),
-        ),
         IconButton(
           onPressed: clearAll,
           icon: Icon(Icons.clear_all),
@@ -182,30 +246,12 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
         ),
       ],
       child: Container(
-        padding: EdgeInsets.all(8),
         color: Theme.of(context).dividerColor,
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
-            Section(
-              "Serviço",
-              serviceId == null ? "Todos" : refData.irnService(serviceId).name,
-              pickService,
-            ),
-            Section(
-              "Região",
-              region ?? "Todas",
-              pickRegion,
-            ),
-            Section(
-                "Distrito",
-                districtId == null
-                    ? "Todos"
-                    : refData.district(districtId).name,
-                pickDistrict),
-            Section(
-                "Concelho",
-                countyId == null ? "Todos" : refData.county(countyId).name,
-                pickCounty),
+            buildService(context),
+            buildLocation(context),
           ],
         ),
       ),
@@ -213,62 +259,49 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
   }
 }
 
-class Section<T> extends StatelessWidget {
+class SectionItem extends StatelessWidget {
   final String title;
-  final String value;
+  final String? value;
+  final String noValueText;
   final Function filterPicker;
 
-  const Section(
+  const SectionItem(
     this.title,
     this.value,
+    this.noValueText,
     this.filterPicker,
   );
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-              ),
+    return GestureDetector(
+      onTap: () => filterPicker(),
+      child: Stack(
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 10,
             ),
-          ],
-        ),
-        GestureDetector(
-          onTap: () => filterPicker(),
-          child: Stack(
-            children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                color: Theme.of(context).scaffoldBackgroundColor,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 10,
-                ),
-                child: Text(
-                  value,
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-              ),
-              Container(
-                alignment: Alignment.centerRight,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Icon(
-                  Icons.navigate_next,
-                  color: Theme.of(context).textTheme.bodyText1!.color,
-                ),
-              ),
-            ],
+            child: Text(
+              value ?? noValueText,
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    fontStyle: value == null ? FontStyle.italic : null,
+                  ),
+            ),
           ),
-        ),
-      ],
+          Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Icon(
+              Icons.navigate_next,
+              color: Theme.of(context).dividerColor,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
