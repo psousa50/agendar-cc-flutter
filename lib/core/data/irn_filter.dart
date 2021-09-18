@@ -101,6 +101,7 @@ class IrnFilter {
 
   IrnFilter clear() {
     return IrnFilter(
+      serviceId: serviceId,
       region: null,
       districtId: null,
       countyId: null,
