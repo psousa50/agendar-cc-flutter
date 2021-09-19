@@ -1,7 +1,9 @@
+import 'package:agendar_cc_flutter/core/service_locator.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/data/models.dart';
-import '../../../select_irn_table/presentation/select_irn_table.dart';
+import 'current_selection.dart';
+import 'filter_info.dart';
 import 'tables_by_date.dart';
 import 'tables_by_location.dart';
 
@@ -26,28 +28,6 @@ class _TablesBrowserState extends State<TablesBrowser> {
     super.didUpdateWidget(oldWidget);
   }
 
-  void selectTable(DateTime selectedDate, String selectedPlace) {
-    var filteredTables = widget.tables.where(
-      (t) => t.date == selectedDate && t.placeName == selectedPlace,
-    );
-    var table = filteredTables.first;
-    var tableSelection = IrnTableSelection(
-      serviceId: table.serviceId,
-      districtId: table.districtId,
-      countyId: table.countyId,
-      placeName: selectedPlace,
-      date: selectedDate,
-    );
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) => SelectIrnTable(
-                tables: filteredTables.filterBy(tableSelection),
-                tableSelection: tableSelection,
-              )),
-    );
-  }
-
   void onDateSelected(DateTime date, DateTime focusedDay) {
     if (_selectedDate != date &&
         widget.tables.where((t) => t.date == date).isEmpty) {
@@ -60,10 +40,6 @@ class _TablesBrowserState extends State<TablesBrowser> {
       _selectedDate = newSelectedDate;
       _focusedDay = focusedDay;
     });
-
-    if (newSelectedDate != null && _selectedPlace != null) {
-      selectTable(newSelectedDate, _selectedPlace!);
-    }
   }
 
   void onPlaceSelected(String place) {
@@ -73,10 +49,6 @@ class _TablesBrowserState extends State<TablesBrowser> {
       _selectedPlace = newSelectedPlace;
       _focusedDay = null;
     });
-
-    if (newSelectedPlace != null && _selectedDate != null) {
-      selectTable(_selectedDate!, newSelectedPlace);
-    }
   }
 
   @override
@@ -85,17 +57,21 @@ class _TablesBrowserState extends State<TablesBrowser> {
       if (constraints.normalize().maxWidth < 480) {
         return Column(
           children: [
-            ConstrainedBox(
-              constraints: BoxConstraints.tightFor(
-                  height: MediaQuery.of(context).size.height * .3),
-              child: TablesByDateView(
-                tables: widget.tables.where(
-                  (t) =>
-                      _selectedPlace == null || t.placeName == _selectedPlace,
+            FilterInfo(ServiceLocator.tablesFilter),
+            CurrentSelection(widget.tables, _selectedDate, _selectedPlace),
+            Expanded(
+              child: ConstrainedBox(
+                constraints: BoxConstraints.tightFor(
+                    height: MediaQuery.of(context).size.height * .3),
+                child: TablesByDateView(
+                  tables: widget.tables.where(
+                    (t) =>
+                        _selectedPlace == null || t.placeName == _selectedPlace,
+                  ),
+                  selectedDate: _selectedDate,
+                  focusedDay: _focusedDay,
+                  onDateSelected: onDateSelected,
                 ),
-                selectedDate: _selectedDate,
-                focusedDay: _focusedDay,
-                onDateSelected: onDateSelected,
               ),
             ),
             Expanded(
@@ -111,26 +87,42 @@ class _TablesBrowserState extends State<TablesBrowser> {
           ],
         );
       } else {
-        return Row(children: [
-          Expanded(
-            child: TablesByDateView(
-              tables: widget.tables.where(
-                (t) => _selectedPlace == null || t.placeName == _selectedPlace,
-              ),
-              selectedDate: _selectedDate,
-              focusedDay: _focusedDay,
-              onDateSelected: onDateSelected,
+        return Column(
+          children: [
+            Row(
+              children: [
+                Expanded(child: FilterInfo(ServiceLocator.tablesFilter)),
+                Expanded(
+                    child: CurrentSelection(
+                        widget.tables, _selectedDate, _selectedPlace)),
+              ],
             ),
-          ),
-          Expanded(
-            child: TablesByLocation(
-              tables: widget.tables.where(
-                  (t) => _selectedDate == null || t.date == _selectedDate),
-              selectedPlace: _selectedPlace,
-              onPlaceSelected: onPlaceSelected,
+            Expanded(
+              child: Row(children: [
+                Expanded(
+                  child: TablesByDateView(
+                    tables: widget.tables.where(
+                      (t) =>
+                          _selectedPlace == null ||
+                          t.placeName == _selectedPlace,
+                    ),
+                    selectedDate: _selectedDate,
+                    focusedDay: _focusedDay,
+                    onDateSelected: onDateSelected,
+                  ),
+                ),
+                Expanded(
+                  child: TablesByLocation(
+                    tables: widget.tables.where((t) =>
+                        _selectedDate == null || t.date == _selectedDate),
+                    selectedPlace: _selectedPlace,
+                    onPlaceSelected: onPlaceSelected,
+                  ),
+                ),
+              ]),
             ),
-          ),
-        ]);
+          ],
+        );
       }
     });
   }

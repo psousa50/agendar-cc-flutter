@@ -49,22 +49,8 @@ class HomePage extends StatelessWidget {
 
 class HomePageView extends StatelessWidget {
   final TablesFilter tablesFilter;
+
   const HomePageView(this.tablesFilter);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        FilterInfo(tablesFilter),
-        Expanded(child: TablesFetcher(tablesFilter)),
-      ],
-    );
-  }
-}
-
-class TablesFetcher extends StatelessWidget {
-  final TablesFilter tablesFilter;
-  const TablesFetcher(this.tablesFilter);
 
   @override
   Widget build(BuildContext context) {
