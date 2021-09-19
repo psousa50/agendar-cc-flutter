@@ -35,6 +35,7 @@ class _TablesByDateViewState extends State<TablesByDateView> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     Map<DateTime, List<IrnTable>> groupedTables =
         groupBy(widget.tables, (t) => t.date);
     var groupedTablesByPlace = groupedTables.map(
@@ -89,16 +90,20 @@ class _TablesByDateViewState extends State<TablesByDateView> {
             day: date.day,
             circleColor: hasEvents
                 ? AppColors.foundTable
-                : Theme.of(context).scaffoldBackgroundColor,
+                : theme.scaffoldBackgroundColor,
             textStyle: hasEvents
-                ? Theme.of(context).accentTextTheme.bodyText1
-                : Theme.of(context).textTheme.bodyText1,
+                ? theme.textTheme.bodyText1!.copyWith(
+                    color: theme.colorScheme.onSecondary,
+                  )
+                : theme.textTheme.bodyText1,
           );
         },
         selectedBuilder: (context, date, focusedDay) => DayCircle(
           day: date.day,
           circleColor: AppColors.selectedTable,
-          textStyle: Theme.of(context).accentTextTheme.bodyText1,
+          textStyle: theme.textTheme.bodyText1!.copyWith(
+            color: theme.colorScheme.onSecondary,
+          ),
         ),
       ),
     );
@@ -120,7 +125,7 @@ class DayCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     var margin = MediaQuery.of(context).size.width / 100.0;
     return AnimatedContainer(
-      duration: Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 300),
       margin: EdgeInsets.all(margin),
       alignment: Alignment.center,
       decoration: BoxDecoration(

@@ -1,3 +1,6 @@
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:time_range_selector/time_range_selector.dart';
+
 import 'ui/themes.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +20,14 @@ class App extends StatelessWidget {
       child: MaterialApp(
         home: HomePage(),
         theme: useDarkTheme ? darkTheme : lightTheme,
+        supportedLocales:
+            TimeRangeSelectorLocalizations.delegate.supportedLocales,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          TimeRangeSelectorLocalizations.delegate,
+        ],
       ),
     );
   }

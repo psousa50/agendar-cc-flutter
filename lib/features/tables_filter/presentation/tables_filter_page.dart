@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:time_range_selector/time_range_selector.dart';
 
 import '../../../core/data/extensions.dart';
 import '../../../core/data/irn_filter.dart';
@@ -149,29 +150,20 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
     }
   }
 
-  void pickStartTime() async {
-    TimeOfDay? timeOfDay = await showTimePicker(
+  void pickTimeRange() async {
+    TimeRange? timeRange = await showTimeRangeSelector(
       context: context,
-      initialTime: filter.startTime ?? TimeOfDay(hour: 8, minute: 0),
+      onTimeRangeChanged: (_) {},
+      minutesStep: 30,
+      timeRange: TimeRange(
+          start: filter.startTime ?? TimeOfDay(hour: 8, minute: 0),
+          end: filter.endTime ?? TimeOfDay(hour: 20, minute: 0)),
     );
-    if (timeOfDay != null) {
+    if (timeRange != null) {
       setState(() {
         filter = filter.copyWith(
-          startTime: timeOfDay,
-        );
-      });
-    }
-  }
-
-  void pickEndTime() async {
-    TimeOfDay? timeOfDay = await showTimePicker(
-      context: context,
-      initialTime: filter.endTime ?? TimeOfDay(hour: 8, minute: 0),
-    );
-    if (timeOfDay != null) {
-      setState(() {
-        filter = filter.copyWith(
-          endTime: timeOfDay,
+          startTime: timeRange.start!,
+          endTime: timeRange.end,
         );
       });
     }
@@ -212,6 +204,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
   }
 
   Widget buildServiceButton(int serviceId, String title) {
+    var theme = Theme.of(context);
     var currentServiceId = filter.serviceId;
     return Expanded(
       child: Padding(
@@ -220,22 +213,22 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
           onPressed: () => updateService(serviceId),
           child: Text(title),
           style: OutlinedButton.styleFrom(
-              backgroundColor: Theme.of(context).canvasColor,
+              backgroundColor: theme.canvasColor,
               primary: currentServiceId == serviceId
-                  ? Theme.of(context).primaryColor
-                  : Theme.of(context).disabledColor),
+                  ? theme.primaryColor
+                  : theme.disabledColor),
         ),
       ),
     );
   }
 
   Widget buildService() {
+    var theme = Theme.of(context);
     return Column(
       children: [
         Row(
           children: [
-            Text("Tipo de Serviço",
-                style: Theme.of(context).textTheme.subtitle1),
+            Text("Tipo de Serviço", style: theme.textTheme.subtitle1),
           ],
         ),
         Row(
@@ -255,6 +248,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
   }
 
   Widget buildLocation() {
+    var theme = Theme.of(context);
     var region = filter.region;
     var districtId = filter.districtId;
     var countyId = filter.countyId;
@@ -264,7 +258,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
           Expanded(
             child: Text(
               "Localização",
-              style: Theme.of(context).textTheme.subtitle1,
+              style: theme.textTheme.subtitle1,
             ),
           ),
           Align(
@@ -273,7 +267,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
               padding: EdgeInsets.all(0),
               onPressed: useCurrentLocation,
               icon: Icon(Icons.location_searching),
-              color: Theme.of(context).accentColor,
+              color: theme.colorScheme.secondary,
             ),
           )
         ]),
@@ -304,13 +298,14 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
   }
 
   Widget buildDateRange() {
+    var theme = Theme.of(context);
     return Column(
       children: [
         Row(
           children: [
             Text(
               "Período",
-              style: Theme.of(context).textTheme.subtitle1,
+              style: theme.textTheme.subtitle1,
             ),
           ],
         ),
@@ -337,13 +332,14 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
   }
 
   Widget buildTimeRange() {
+    var theme = Theme.of(context);
     return Column(
       children: [
         Row(
           children: [
             Text(
               "Horário",
-              style: Theme.of(context).textTheme.subtitle1,
+              style: theme.textTheme.subtitle1,
             ),
           ],
         ),
@@ -353,15 +349,9 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
               children: [
                 SectionItem(
                   "",
-                  filter.startTime?.toSlotHHMM(),
+                  "${filter.startTime?.toSlotHHMM()} - ${filter.endTime?.toSlotHHMM()}",
                   "",
-                  pickStartTime,
-                ),
-                SectionItem(
-                  "",
-                  filter.endTime?.toSlotHHMM(),
-                  "",
-                  pickEndTime,
+                  pickTimeRange,
                 ),
               ],
             ),
@@ -373,6 +363,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return PageWithAppBar(
       title: "Filtros",
       closeButton: true,
@@ -387,7 +378,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
         ),
       ],
       child: Container(
-        color: Theme.of(context).dividerColor,
+        color: theme.dividerColor,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
@@ -418,22 +409,23 @@ class SectionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return GestureDetector(
       onTap: () => filterPicker(),
       child: Stack(
         children: [
           Container(
             alignment: Alignment.centerLeft,
-            color: Theme.of(context).scaffoldBackgroundColor,
+            color: theme.scaffoldBackgroundColor,
             padding: const EdgeInsets.symmetric(
               vertical: 10,
               horizontal: 10,
             ),
             child: Text(
               value ?? noValueText,
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    fontStyle: value == null ? FontStyle.italic : null,
-                  ),
+              style: theme.textTheme.bodyText1!.copyWith(
+                fontStyle: value == null ? FontStyle.italic : null,
+              ),
             ),
           ),
           Container(
@@ -441,7 +433,7 @@ class SectionItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Icon(
               Icons.navigate_next,
-              color: Theme.of(context).dividerColor,
+              color: theme.dividerColor,
             ),
           ),
         ],

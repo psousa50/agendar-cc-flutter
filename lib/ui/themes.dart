@@ -8,7 +8,8 @@ class AppColors {
 }
 
 const primaryColor = Color(0xfff0ad4e);
-const accentColor = Colors.teal;
+const secondaryColor = Colors.teal;
+const onSecondaryColor = Colors.white;
 const mainTextColor = Color(0xff0095a8);
 var textLightThemeColor = Colors.grey.shade600;
 var textDarkThemeColor = Colors.grey.shade300;
@@ -41,19 +42,23 @@ var textDarkTheme = ThemeData.dark()
 var lightTheme = ThemeData(
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      primary: accentColor,
+      primary: secondaryColor,
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
-      primary: accentColor,
+      primary: secondaryColor,
     ),
   ),
   primarySwatch: generateMaterialColor(primaryColor),
-  accentColor: accentColor,
   selectedRowColor: selectedColor,
   textTheme: textLightTheme,
-).copyWith(accentColor: accentColor);
+  colorScheme: ColorScheme.light(
+    primary: primaryColor,
+    secondary: secondaryColor,
+    onSecondary: onSecondaryColor,
+  ),
+);
 
 var darkTheme = ThemeData.dark().copyWith(
   selectedRowColor: selectedColor,

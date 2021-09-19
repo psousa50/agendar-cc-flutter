@@ -61,7 +61,7 @@ class _SelectItemPageState extends State<SelectItemPage> {
               if (widget.selectedItem == item.id)
                 Icon(
                   Icons.check,
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
             ],
           ),
