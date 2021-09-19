@@ -65,7 +65,7 @@ class IrnFilter {
       'placeName': placeName,
       'startTime': startTime?.toSlotHHMMSS(),
       'endTime': endTime?.toSlotHHMMSS(),
-      'startDate': startDate?.toIso8601String(),
+      'startDate': startDate?.millisecondsSinceEpoch,
       'endDate': endDate?.millisecondsSinceEpoch,
       'date': date?.millisecondsSinceEpoch,
     };
