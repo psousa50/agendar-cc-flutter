@@ -10,6 +10,8 @@
     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
+    <key>CFBundleDisplayName</key>
+    <string>Agendar CC</string>
     <key>CFBundleName</key>
     <string>agendar_cc_flutter</string>
     <key>CFBundlePackageType</key>
