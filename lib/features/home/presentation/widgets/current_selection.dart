@@ -1,9 +1,7 @@
-import 'package:agendar_cc_flutter/core/service_locator.dart';
-import 'package:agendar_cc_flutter/ui/themes.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/data/models.dart';
+import '../../../../core/service_locator.dart';
 import '../../../select_irn_table/presentation/select_irn_table.dart';
 
 class CurrentSelection extends StatelessWidget {

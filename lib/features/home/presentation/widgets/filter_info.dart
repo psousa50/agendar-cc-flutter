@@ -22,11 +22,11 @@ class FilterInfo extends StatelessWidget {
     return Column(
       children: [
         buildInfoRow(
-          tablesFilter.serviceDescription(),
+          tablesFilter.filter.serviceDescription(),
           Theme.of(context).textTheme.subtitle1,
         ),
         buildInfoRow(
-          tablesFilter.locationDescription(),
+          tablesFilter.filter.locationDescription(),
           Theme.of(context).textTheme.subtitle2,
         )
       ],

@@ -9,7 +9,6 @@ import '../../../../widgets/page_transitions.dart';
 import '../../../../widgets/page_with_app_bar.dart';
 import '../../../tables_filter/presentation/tables_filter_page.dart';
 import '../widgets/app_startup_builder.dart';
-import '../widgets/filter_info.dart';
 import '../widgets/tables_browser.dart';
 
 class HomePage extends StatelessWidget {

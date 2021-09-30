@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:time_range_selector/time_range_selector.dart';
 
-import '../../../core/data/extensions.dart';
 import '../../../core/data/irn_filter.dart';
 import '../../../core/service_locator.dart';
 import '../../../widgets/page_with_app_bar.dart';
@@ -349,7 +348,7 @@ class _TablesFilterPageState extends State<TablesFilterPage> {
               children: [
                 SectionItem(
                   "",
-                  "${filter.startTime?.toSlotHHMM()} - ${filter.endTime?.toSlotHHMM()}",
+                  filter.timeRangeDescription(),
                   "",
                   pickTimeRange,
                 ),
