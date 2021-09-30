@@ -251,7 +251,9 @@ class IrnTable {
       serviceId: map['serviceId'],
       tableNumber: map['tableNumber'],
       timeSlots: List<String>.from(map['timeSlots']),
-      gpsLocation: GpsLocation.fromMap(map['gpsLocation']),
+      gpsLocation: map['gpsLocation'] != null
+          ? GpsLocation.fromMap(map['gpsLocation'])
+          : null,
     );
   }
 
